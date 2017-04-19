@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -22,8 +24,9 @@ public class GetPlacesService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         double lat=intent.getDoubleExtra("lat",0);
         double lng=intent.getDoubleExtra("lng",0);
-        //TODO need to check another location another lat another lng
-        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&keyword=sushi&key=AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ";
+        String PlaceKind=intent.getStringExtra("PlaceKind");
+        //need to check another location another lat another lng
+        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&keyword="+PlaceKind+"&key=AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ";
 
         OkHttpClient client = new OkHttpClient();
         // GET request
@@ -42,10 +45,12 @@ public class GetPlacesService extends IntentService {
         }catch (IOException interntEX)
         {
         }
+        Gson gson=new Gson();
+        PlacesList placesList=gson.fromJson(placesString,PlacesList.class);
         Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
-        Log.d("aaaaaaaaaaaa",placesString);
-        sendBroadcastIntent.putExtra("response",placesString);
+        sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
         LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
+
 
 
     }

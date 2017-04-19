@@ -24,7 +24,7 @@
         android:weightSum="2">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/SearchBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
@@ -36,18 +36,20 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:text="@string/LocalCB" />
+
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/PlacesRV"
+    <LinearLayout
+        android:id="@+id/RecyclerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0" />
+        android:layout_weight="3"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/PlacesRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>

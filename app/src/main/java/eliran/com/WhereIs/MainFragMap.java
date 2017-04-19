@@ -17,12 +17,18 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class MainFragMap extends Fragment implements LocationListener {
@@ -30,6 +36,10 @@ public class MainFragMap extends Fragment implements LocationListener {
     LocationManager locationManager;
     EditText SearchET;
     TextView textView;
+    Button SearchBtn;
+    double lng;
+    double lat;
+    RecyclerView placesRV;
 
 
     public MainFragMap() {
@@ -61,10 +71,24 @@ public class MainFragMap extends Fragment implements LocationListener {
         }
 
 
-
+        placesRV= (RecyclerView) view.findViewById(R.id.PlacesRV);
+        LinearLayout recyclerLayout= (LinearLayout) view.findViewById(R.id.RecyclerLayout);
 
         SearchET= (EditText) view.findViewById(R.id.SearchPlaceET);
-        textView= (TextView) view.findViewById(R.id.textView);
+        SearchBtn= (Button) view.findViewById(R.id.SearchBtn);
+
+        SearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TODO intent service to get all places neer by
+                Intent intent = new Intent(getActivity(), GetPlacesService.class);
+                intent.putExtra("lat", lat);
+                intent.putExtra("lng", lng);
+                intent.putExtra("PlaceKind",SearchET.getText().toString());
+                getActivity().startService(intent);
+            }
+        });
 
 
         return view;
@@ -74,19 +98,10 @@ public class MainFragMap extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        int counter=0;
+        lat = location.getLatitude();
+        lng = location.getLongitude();
         //get the current LatLng of the device
-        if(counter==0) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            //TODO intent service to get all places neer by
-            Intent intent = new Intent(getActivity(), GetPlacesService.class);
-            intent.putExtra("lat", lat);
-            intent.putExtra("lng", lng);
-            getActivity().startService(intent);
-            counter = 1;
-            //textView.setText("lat=="+lat+"lng=="+lng);
-        }
+
     }
 
     @Override
@@ -112,8 +127,11 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String s=intent.getStringExtra("response");
-            textView.setText(s);
+            ArrayList<Place> allPlaces=intent.getParcelableArrayListExtra("response");
+            GridLayoutManager gridLayoutManager=new GridLayoutManager(context,3);
+            placesRV.setLayoutManager(gridLayoutManager);
+            PlaceRVadapter placeRVadapter=new PlaceRVadapter(context,allPlaces,lat,lng);
+            placesRV.setAdapter(placeRVadapter);
 
         }
     }
