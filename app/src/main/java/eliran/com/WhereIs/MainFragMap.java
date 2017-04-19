@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ public class MainFragMap extends Fragment implements LocationListener {
 
     LocationManager locationManager;
     EditText SearchET;
-    TextView textView;
     Button SearchBtn;
     double lng;
     double lat;
@@ -72,7 +72,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
 
         placesRV= (RecyclerView) view.findViewById(R.id.PlacesRV);
-        LinearLayout recyclerLayout= (LinearLayout) view.findViewById(R.id.RecyclerLayout);
+       // LinearLayout recyclerLayout= (LinearLayout) view.findViewById(R.id.RecyclerLayout);
 
         SearchET= (EditText) view.findViewById(R.id.SearchPlaceET);
         SearchBtn= (Button) view.findViewById(R.id.SearchBtn);
@@ -89,7 +89,6 @@ public class MainFragMap extends Fragment implements LocationListener {
                 getActivity().startService(intent);
             }
         });
-
 
         return view;
     }
@@ -128,10 +127,11 @@ public class MainFragMap extends Fragment implements LocationListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             ArrayList<Place> allPlaces=intent.getParcelableArrayListExtra("response");
-            GridLayoutManager gridLayoutManager=new GridLayoutManager(context,3);
-            placesRV.setLayoutManager(gridLayoutManager);
-            PlaceRVadapter placeRVadapter=new PlaceRVadapter(context,allPlaces,lat,lng);
+
+            placesRV.setLayoutManager(new LinearLayoutManager(context));
+            PlaceRVadapter placeRVadapter=new PlaceRVadapter(getActivity(),allPlaces,lat,lng);
             placesRV.setAdapter(placeRVadapter);
+            Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
 
         }
     }

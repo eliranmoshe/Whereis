@@ -26,7 +26,7 @@ public class GetPlacesService extends IntentService {
         double lng=intent.getDoubleExtra("lng",0);
         String PlaceKind=intent.getStringExtra("PlaceKind");
         //need to check another location another lat another lng
-        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&keyword="+PlaceKind+"&key=AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ";
+        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+32.064342+","+34.7862919+"&radius=500&keyword="+PlaceKind+"&key=AIzaSyAV3E-XQ-Zdze08MwnxBG3gNejgXlNO4MY";
 
         OkHttpClient client = new OkHttpClient();
         // GET request
@@ -35,7 +35,6 @@ public class GetPlacesService extends IntentService {
                 .build();
 
         placesString="";
-
 
         try {
             client.newCall(request).execute();
