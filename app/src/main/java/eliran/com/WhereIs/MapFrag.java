@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,14 +33,15 @@ public  Place selectedPlace;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_map, container, false);
-        MapFragment mapFragment= new MapFragment();
+
+         MapFragment mapFragment= new MapFragment();
         getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFragment).commit();
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
 
-                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
                 LatLng latLng= new LatLng(selectedPlace.geometry.location.lat, selectedPlace.geometry.location.lng );
                 CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng, 17);

@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
 
     @Override
-    public void changeFragments(Place currentFood) {
+    public void changeFragments(Place currentPlace) {
         MapFrag mapFrag=new MapFrag();
+        mapFrag.selectedPlace=currentPlace;
         getFragmentManager().beginTransaction().replace(R.id.MainContainer,mapFrag).commit();
 
     }
