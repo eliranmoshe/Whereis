@@ -24,11 +24,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
@@ -38,8 +42,10 @@ public class MainFragMap extends Fragment implements LocationListener {
     EditText SearchET;
     Button SearchBtn;
     public static double lng;
-    public  static double lat;
+    public static double lat;
     RecyclerView placesRV;
+    boolean IsNeerBy = true;
+    CheckBox IsNeerByCB;
 
 
     public MainFragMap() {
@@ -52,9 +58,9 @@ public class MainFragMap extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
         //inflate the fragment into layout
         View view = inflater.inflate(R.layout.main_frag_map, container, false);
-
-        PlacesBroadCastReciever placesBroadCastReciever=new PlacesBroadCastReciever();
-        IntentFilter intentFilter=new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
+        // make broadcast filter and listener
+        PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
+        IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
@@ -67,32 +73,52 @@ public class MainFragMap extends Fragment implements LocationListener {
         } else {
             //request permission 12 is the request number
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
-
         }
 
-
-        placesRV= (RecyclerView) view.findViewById(R.id.PlacesRV);
-       // LinearLayout recyclerLayout= (LinearLayout) view.findViewById(R.id.RecyclerLayout);
-
-        SearchET= (EditText) view.findViewById(R.id.SearchPlaceET);
-        SearchBtn= (Button) view.findViewById(R.id.SearchBtn);
+        placesRV = (RecyclerView) view.findViewById(R.id.PlacesRV);
+        SearchET = (EditText) view.findViewById(R.id.SearchPlaceET);
+        IsNeerByCB= (CheckBox) view.findViewById(R.id.LoacalSwitchCB);
+        IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (IsNeerBy==true){
+                IsNeerBy=false;}else{
+                    IsNeerBy=true;
+                }
+            }
+        });
+        SearchBtn = (Button) view.findViewById(R.id.SearchBtn);
 
         SearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO intent service to get all places neer by
+                String searchet = SearchET.getText().toString();
+                String Url = "";
+                searchet = searchet.trim();
+                if (searchet.length() > 0) {
+                    try {
+                        Url = URLEncoder.encode(searchet, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
                 Intent intent = new Intent(getActivity(), GetPlacesService.class);
-                intent.putExtra("lat", lat);
-                intent.putExtra("lng", lng);
-                intent.putExtra("PlaceKind",SearchET.getText().toString());
+                if (IsNeerBy==true) {
+                    intent.putExtra("lat", lat);
+                    intent.putExtra("lng", lng);
+                    intent.putExtra("PlaceKind", Url);
+                    intent.putExtra("IsNeerBy",1);
+
+                }else if (IsNeerBy==false){
+                    intent.putExtra("query",Url);
+                    intent.putExtra("IsNeerBy",-1);
+                }
                 getActivity().startService(intent);
             }
         });
 
         return view;
     }
-
 
 
     @Override
@@ -118,18 +144,15 @@ public class MainFragMap extends Fragment implements LocationListener {
 
     }
 
-    //TODO get broadcast reciver from service to show the closest places list and put it in the recycler view
 
-
-
-    public  class PlacesBroadCastReciever extends BroadcastReceiver{
+    public class PlacesBroadCastReciever extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            ArrayList<Place> allPlaces=intent.getParcelableArrayListExtra("response");
+            ArrayList<Place> allPlaces = intent.getParcelableArrayListExtra("response");
 
             placesRV.setLayoutManager(new LinearLayoutManager(context));
-            PlaceRVadapter placeRVadapter=new PlaceRVadapter(getActivity(),allPlaces,lat,lng);
+            PlaceRVadapter placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
             Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
 

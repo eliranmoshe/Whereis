@@ -11,12 +11,14 @@ public class Place implements Parcelable {
     String name;
     String vicinity;
     String icon;
+    String formatted_address;
     geometry geometry;
 
     protected Place(Parcel in) {
         name = in.readString();
         vicinity = in.readString();
         icon = in.readString();
+        formatted_address = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -41,7 +43,10 @@ public class Place implements Parcelable {
         dest.writeString(name);
         dest.writeString(vicinity);
         dest.writeString(icon);
+        dest.writeString(formatted_address);
     }
+
+
     //TODO maybe need another int to Miles
     //TODO maybe i need to declarate ImagePath to not be a null String
 }

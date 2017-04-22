@@ -16,22 +16,47 @@ import okhttp3.Response;
 
 public class GetPlacesService extends IntentService {
     String placesString;
+    String ByLocationUrl;
+    String ByQueryUrl;
+
     public GetPlacesService() {
         super("GetPlacesService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        double lat=intent.getDoubleExtra("lat",0);
-        double lng=intent.getDoubleExtra("lng",0);
-        String PlaceKind=intent.getStringExtra("PlaceKind");
-        //need to check another location another lat another lng
-        String url="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+31.8903396+","+34.773063+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyAV3E-XQ-Zdze08MwnxBG3gNejgXlNO4MY";
+        int IsNeerBy=intent.getIntExtra("IsNeerBy",0);
+        if (IsNeerBy==1) {
+            double lat = intent.getDoubleExtra("lat", 0);
+            double lng = intent.getDoubleExtra("lng", 0);
+            String PlaceKind = intent.getStringExtra("PlaceKind");
+            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+31.8903396+","+34.773063+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyAV3E-XQ-Zdze08MwnxBG3gNejgXlNO4MY";
+            placesString=SearchByLocation(ByLocationUrl);
 
+        }else if (IsNeerBy==-1){
+            String query=intent.getStringExtra("query");
+            ByQueryUrl="https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query+"&key=AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ";
+            placesString=SearchByQuery(ByQueryUrl);
+        }
+
+        //need to check another location another lat another lng
+
+
+
+        Gson gson=new Gson();
+        PlacesList placesList=gson.fromJson(placesString,PlacesList.class);
+        Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
+        sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
+
+
+
+    }
+    public String SearchByLocation(String bylocationurl){
         OkHttpClient client = new OkHttpClient();
         // GET request
         Request request = new Request.Builder()
-                .url(url)
+                .url(bylocationurl)
                 .build();
 
         placesString="";
@@ -44,14 +69,27 @@ public class GetPlacesService extends IntentService {
         }catch (IOException interntEX)
         {
         }
-        Gson gson=new Gson();
-        PlacesList placesList=gson.fromJson(placesString,PlacesList.class);
-        Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
-        sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
-
-
-
+        return placesString;
     }
+    public String SearchByQuery(String byqueryurl){
+        OkHttpClient client = new OkHttpClient();
+        // GET request
+        Request request = new Request.Builder()
+                .url(byqueryurl)
+                .build();
+
+        placesString="";
+
+        try {
+            client.newCall(request).execute();
+            Response response = client.newCall(request).execute();
+            placesString= response.body().string();
+
+        }catch (IOException interntEX)
+        {
+        }
+        return placesString;
+    }
+
 
 }

@@ -45,16 +45,13 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
     @Override
     public void onBindViewHolder(Myholder holder, int position) {
-        //TODO bring current object frrom list to MyHolder.bindData
         Place place=allPlaces.get(position);
-        //currentPlace=place;
         holder.BindData(place);
 
     }
 
     @Override
     public int getItemCount() {
-        //TODO return size of list
         return allPlaces.size();
     }
 
@@ -103,12 +100,16 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
 
         }
-        //TODO bind data need to recive object
         public void BindData(Place place) {
 
             currentPlace=place;
             itemPlaceNameTV.setText(place.name);
+            if (place.vicinity!=null){
             itemAdressTV.setText(place.vicinity);
+            }else{
+                itemAdressTV.setText(place.formatted_address);
+            }
+
             double distance=distance(currentLat,currentlng,place.geometry.location.lat,place.geometry.location.lng);
             String km=new DecimalFormat("##.##").format(distance);
             itemDistanceTV.setText(km+"km");
