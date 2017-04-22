@@ -9,4 +9,5 @@
     <string name="AddFavoritePPItem">ADD TO FAVORITE</string>
     <string name="SwitchKMtoMLItem">SWITCH TO MILES</string>
     <string name="DelFavoriteItem">DELELTE ALL FAVORITE</string>
+    <string name="SwitchMLtoKM">SWITCH TO KM</string>
 </resources>

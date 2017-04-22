@@ -13,6 +13,7 @@ public class Place implements Parcelable {
     String icon;
     String formatted_address;
     geometry geometry;
+    double distance;
 
     protected Place(Parcel in) {
         name = in.readString();

@@ -46,6 +46,8 @@ public class MainFragMap extends Fragment implements LocationListener {
     RecyclerView placesRV;
     boolean IsNeerBy = true;
     CheckBox IsNeerByCB;
+    PlaceRVadapter placeRVadapter;
+    ArrayList<Place> allPlaces;
 
 
     public MainFragMap() {
@@ -149,10 +151,10 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            ArrayList<Place> allPlaces = intent.getParcelableArrayListExtra("response");
+            allPlaces  = intent.getParcelableArrayListExtra("response");
 
             placesRV.setLayoutManager(new LinearLayoutManager(context));
-            PlaceRVadapter placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
+            placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
             Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
 

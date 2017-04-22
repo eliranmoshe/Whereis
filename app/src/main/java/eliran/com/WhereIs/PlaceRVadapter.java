@@ -27,6 +27,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
     double currentLat;
     double currentlng;
     Place currentPlace;
+    double distance;
 
 
 
@@ -110,7 +111,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                 itemAdressTV.setText(place.formatted_address);
             }
 
-            double distance=distance(currentLat,currentlng,place.geometry.location.lat,place.geometry.location.lng);
+            distance=distance(currentLat,currentlng,place.geometry.location.lat,place.geometry.location.lng);
             String km=new DecimalFormat("##.##").format(distance);
             itemDistanceTV.setText(km+"km");
             Picasso.with(c).load(place.icon).into(itemImageIV);
