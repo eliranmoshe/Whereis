@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.app.FragmentTransaction;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -67,6 +70,36 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemDistanceTV = (TextView) itemView.findViewById(R.id.ItemDistanceTV);
              itemAdressTV = (TextView) itemView.findViewById(R.id.ItemAdressTV);
             itemImageIV = (ImageView) itemView.findViewById(R.id.ItemImageIV);
+           itemView.setOnLongClickListener(new View.OnLongClickListener() {
+               @Override
+               public boolean onLongClick(View v) {
+                   android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(c, v);
+                   popupMenu.inflate(R.menu.popup_menu);
+                   popupMenu.show();
+                   popupMenu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+                       @Override
+                       public boolean onMenuItemClick(MenuItem item) {
+                           switch (item.getItemId()){
+                               case R.id.AddFavoritePPItem:
+                                   //TODO add to favorite DB
+                                   break;
+                               case R.id.SharedPlacePPItem:
+                                   //share the current location on googleMaps
+                                   currentPlace=allPlaces.get(getAdapterPosition());
+                                   String location="https://www.google.co.il/maps/@"+currentPlace.geometry.location.lat+","+currentPlace.geometry.location.lng+",18.79z?hl=en";
+                                   Intent sharingIntent=new Intent(android.content.Intent.ACTION_SEND);
+                                   sharingIntent.setType("text/plain");
+                                   sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "place Details");
+                                   sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,location );
+                                   c.startActivity(sharingIntent);
+                                   break;
+                           }
+                           return true;
+                       }
+                   });
+                   return true;
+               }
+           });
 
 
         }
@@ -83,8 +116,10 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemImageIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    currentPlace=allPlaces.get(getAdapterPosition());
                     FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
                     fragmentChangerInterface.changeFragments(currentPlace);
+
                     Log.d("hhhhhhhhhhh","");
                 }
             });
@@ -105,5 +140,6 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         double d = r * c;
         return d;
     }
+
 
 }

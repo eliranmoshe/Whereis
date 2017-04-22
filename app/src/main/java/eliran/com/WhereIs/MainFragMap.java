@@ -37,8 +37,8 @@ public class MainFragMap extends Fragment implements LocationListener {
     LocationManager locationManager;
     EditText SearchET;
     Button SearchBtn;
-    double lng;
-    double lat;
+    public static double lng;
+    public  static double lat;
     RecyclerView placesRV;
 
 

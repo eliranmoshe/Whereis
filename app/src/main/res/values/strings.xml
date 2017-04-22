@@ -5,4 +5,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="SearchET">search place</string>
     <string name="LocalCB">search local</string>
+    <string name="SharedPlace">SHARE THIS PLACE</string>
+    <string name="AddFavoritePPItem">ADD TO FAVORITE</string>
 </resources>

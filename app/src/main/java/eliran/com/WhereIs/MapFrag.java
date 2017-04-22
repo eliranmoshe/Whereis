@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFrag extends Fragment {
 public  Place selectedPlace;
 
+
     public MapFrag() {
 
     }
@@ -50,6 +51,10 @@ public  Place selectedPlace;
                 googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                googleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(MainFragMap.lat,MainFragMap.lng))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
 
                 googleMap.moveCamera(update);
             }
