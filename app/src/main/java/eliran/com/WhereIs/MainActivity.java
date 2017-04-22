@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
+       /* switch (item.getItemId())
         {
             case R.id.SwitchKMtoMLItem:
                 //TODO switch to mile and change text
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
             case R.id.DelFavoriteItem:
                 //TODO delete all favorit DB
                 break;
-        }
+        }*/
 
         return true;
     }
@@ -72,5 +72,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         double d = r * c;
         d=d/1.61;
         return d;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //TODO get boolean from settings to change km to mile
     }
 }

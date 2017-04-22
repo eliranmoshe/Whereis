@@ -3,9 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/SwitchKMtoMLItem"
-        android:title="@string/SwitchKMtoMLItem" />
-    <item
-        android:id="@+id/DelFavoriteItem"
-        android:title="@string/DelFavoriteItem" />
+        android:id="@+id/SettingsItem"
+        android:title="settings" />
 </menu>

@@ -10,4 +10,6 @@
     <string name="SwitchKMtoMLItem">SWITCH TO MILES</string>
     <string name="DelFavoriteItem">DELELTE ALL FAVORITE</string>
     <string name="SwitchMLtoKM">SWITCH TO KM</string>
+    <string name="Settings">SETTINGS</string>
+    <string name="SettingsItem">SETTINGS</string>
 </resources>

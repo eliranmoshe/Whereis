@@ -20,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingPref"></activity>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBqhBgDz_b5i4KQ1KQ9IhCWOGKohiJLmWY"/>
 
         <service
