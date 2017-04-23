@@ -13,4 +13,5 @@
     <string name="Settings">SETTINGS</string>
     <string name="SettingsItem">SETTINGS</string>
     <string name="GoToFavoriteItem">GO TO FAVORITE</string>
+    <string name="FavoriteListTV">FAVORITE LIST</string>
 </resources>

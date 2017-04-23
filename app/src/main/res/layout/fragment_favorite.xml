@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/FavListContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2"
+    tools:context="eliran.com.WhereIs.FavoriteFrag">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/FavoriteListTV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="FAVORITE LIST"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/FavListRV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.7" />
+
+</LinearLayout>

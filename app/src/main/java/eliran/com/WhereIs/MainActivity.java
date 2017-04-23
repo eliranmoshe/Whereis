@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public void FromMainToFavorite() {
+        FavoriteFrag favoriteFrag=new FavoriteFrag();
+        getFragmentManager().beginTransaction().addToBackStack("FavFrag").add(R.id.FavListContainer,favoriteFrag);
 
     }
 
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
                 startActivity(intent);
                 break;
             case R.id.GoToFavoriteItem:
-
+                FavoriteFrag favoriteFrag=new FavoriteFrag();
+                getFragmentManager().beginTransaction().addToBackStack("FavFrag").add(R.id.FavListContainer,favoriteFrag);
         }
 
         return true;

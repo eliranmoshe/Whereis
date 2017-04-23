@@ -83,9 +83,9 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                        public boolean onMenuItemClick(MenuItem item) {
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
-                                   Place place=new Place(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).lat,allPlaces.get(getAdapterPosition()).lng);
+                                  FavoritePlace place=new FavoritePlace(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).geometry.location.lat,allPlaces.get(getAdapterPosition()).geometry.location.lng);
                                    place.save();
-                                   //TODO add to favorite DB
+                                   //TODO add to favorite DB not find table
                                    break;
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps

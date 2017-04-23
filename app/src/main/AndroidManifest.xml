@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingPref"></activity>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBqhBgDz_b5i4KQ1KQ9IhCWOGKohiJLmWY"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ"/>
         <meta-data android:name="DATABASE" android:value="places.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

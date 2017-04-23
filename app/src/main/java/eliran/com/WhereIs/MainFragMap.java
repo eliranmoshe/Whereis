@@ -117,10 +117,10 @@ public class MainFragMap extends Fragment implements LocationListener {
                         intent.putExtra("query",Url);
                         intent.putExtra("IsNeerBy",-1);
                     }
-                    LoadingDialog = new ProgressDialog(getActivity());
+                 /*   LoadingDialog = new ProgressDialog(getActivity());
                     LoadingDialog.setTitle("PLEASE WAIT");
                     //show the dialog:
-                    LoadingDialog.show();
+                    LoadingDialog.show();*/
 
                     getActivity().startService(intent);
                 }else {
@@ -181,7 +181,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             else{
                 Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
             }
-            LoadingDialog.dismiss();
+            //LoadingDialog.dismiss();
         }
     }
 }
