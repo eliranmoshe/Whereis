@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.orm.SugarContext;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -45,6 +46,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         View v = LayoutInflater.from(c).inflate(R.layout.place_item, parent,false);
         Myholder myholder = new Myholder(v);
         MainActivity.IsFirstTime="1";
+        SugarContext.init(c);
         return myholder;
     }
 

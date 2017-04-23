@@ -3,10 +3,13 @@ package eliran.com.WhereIs;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.orm.SugarContext;
 
 import java.util.List;
 
@@ -26,8 +29,10 @@ RecyclerView favListRV;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View view=inflater.inflate(R.layout.fragment_favorite, container, false);
+        SugarContext.init(getActivity().getApplicationContext());
         favListRV= (RecyclerView) view.findViewById(R.id.FavListRV);
-        List<Place>FavPlaces=FavoritePlace.listAll(Place.class);
+        favListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+        List<FavoritePlace>FavPlaces=FavoritePlace.listAll(FavoritePlace.class);
        FavRVadapter adapter=new FavRVadapter(getActivity(),FavPlaces);
         favListRV.setAdapter(adapter);
 

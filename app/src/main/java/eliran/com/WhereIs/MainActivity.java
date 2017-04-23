@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         setContentView(R.layout.activity_main);
 
         //Add the main fragment to activity
-       mainFragMap =new MainFragMap();
+         mainFragMap =new MainFragMap();
         getFragmentManager().beginTransaction().add(R.id.MainContainer,mainFragMap).commit();
 
         SugarContext.init(getApplicationContext());
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     @Override
     public void FromMainToFavorite() {
         FavoriteFrag favoriteFrag=new FavoriteFrag();
-        getFragmentManager().beginTransaction().addToBackStack("FavFrag").add(R.id.FavListContainer,favoriteFrag);
+        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag).commit();
 
     }
 
@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
                 startActivity(intent);
                 break;
             case R.id.GoToFavoriteItem:
-                FavoriteFrag favoriteFrag=new FavoriteFrag();
-                getFragmentManager().beginTransaction().addToBackStack("FavFrag").add(R.id.FavListContainer,favoriteFrag);
+                FromMainToFavorite();
         }
 
         return true;

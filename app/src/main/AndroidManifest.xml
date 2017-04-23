@@ -22,8 +22,8 @@
         </activity>
         <activity android:name=".SettingPref"></activity>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ"/>
-        <meta-data android:name="DATABASE" android:value="places.db" />
-        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="DATABASE" android:value="FAVORITE_PLACE.db" />
+        <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="eliran.com.WhereIs" />
 
