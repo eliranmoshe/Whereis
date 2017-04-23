@@ -6,4 +6,8 @@ package eliran.com.WhereIs;
 
 public class geometry {
 location location;
+
+    public geometry(eliran.com.WhereIs.location location) {
+        this.location = location;
+    }
 }

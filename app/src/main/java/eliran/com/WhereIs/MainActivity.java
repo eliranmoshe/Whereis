@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.orm.SugarContext;
+
 public class MainActivity extends AppCompatActivity implements FragmentChangerInterface{
     MainFragMap mainFragMap;
     public static String IsFirstTime="";
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
        mainFragMap =new MainFragMap();
         getFragmentManager().beginTransaction().add(R.id.MainContainer,mainFragMap).commit();
 
+        SugarContext.init(getApplicationContext());
 
 
         //TODO save data on screen rotation
@@ -25,13 +28,19 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
 
     @Override
-    public void changeFragments(Place currentPlace) {
+    public void FromMainToMap(Place currentPlace) {
 
         MapFrag mapFrag=new MapFrag();
         mapFrag.selectedPlace=currentPlace;
         getFragmentManager().beginTransaction().addToBackStack("MapFrag").add(R.id.MainContainer,mapFrag).commit();
 
     }
+
+    @Override
+    public void FromMainToFavorite() {
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,10 +50,15 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-      if (item.getItemId()==R.id.SettingsItem){
-          Intent intent=new Intent(this,SettingPref.class);
-          startActivity(intent);
-      }
+
+        switch (item.getItemId()){
+            case R.id.SettingsItem:
+                Intent intent=new Intent(this,SettingPref.class);
+                startActivity(intent);
+                break;
+            case R.id.GoToFavoriteItem:
+
+        }
 
         return true;
     }

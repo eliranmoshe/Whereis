@@ -83,6 +83,8 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                        public boolean onMenuItemClick(MenuItem item) {
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
+                                   Place place=new Place(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).lat,allPlaces.get(getAdapterPosition()).lng);
+                                   place.save();
                                    //TODO add to favorite DB
                                    break;
                                case R.id.SharedPlacePPItem:
@@ -137,7 +139,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                 public void onClick(View v) {
                     currentPlace=allPlaces.get(getAdapterPosition());
                     FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
-                    fragmentChangerInterface.changeFragments(currentPlace);
+                    fragmentChangerInterface.FromMainToMap(currentPlace);
 
                     Log.d("hhhhhhhhhhh","");
                 }

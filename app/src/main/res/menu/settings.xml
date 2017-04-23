@@ -5,4 +5,7 @@
     <item
         android:id="@+id/SettingsItem"
         android:title="settings" />
+    <item
+        android:id="@+id/GoToFavoriteItem"
+        android:title="GO TO FAVORITE " />
 </menu>

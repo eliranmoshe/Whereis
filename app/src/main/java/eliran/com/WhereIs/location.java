@@ -7,4 +7,9 @@ package eliran.com.WhereIs;
 public class location {
      double lat;
     double lng;
+
+    public location(double lat, double lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
 }

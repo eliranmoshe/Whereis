@@ -12,4 +12,5 @@
     <string name="SwitchMLtoKM">SWITCH TO KM</string>
     <string name="Settings">SETTINGS</string>
     <string name="SettingsItem">SETTINGS</string>
+    <string name="GoToFavoriteItem">GO TO FAVORITE</string>
 </resources>

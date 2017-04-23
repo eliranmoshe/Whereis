@@ -3,17 +3,32 @@ package eliran.com.WhereIs;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by eliran on 4/15/2017.
  */
 
-public class Place implements Parcelable {
+public class Place extends SugarRecord implements Parcelable {
     String name;
     String vicinity;
     String icon;
     String formatted_address;
     geometry geometry;
-    double distance;
+    double lat;
+    double lng;
+
+    public Place() {
+    }
+
+    public Place(String name, String vicinity, String icon, String formatted_address, double lat, double lng) {
+        this.name = name;
+        this.vicinity = vicinity;
+        this.icon = icon;
+        this.formatted_address = formatted_address;
+        this.lat = lat;
+        this.lng = lng;
+    }
 
     protected Place(Parcel in) {
         name = in.readString();
