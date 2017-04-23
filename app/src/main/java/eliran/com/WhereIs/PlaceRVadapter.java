@@ -85,7 +85,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                                case R.id.AddFavoritePPItem:
                                   FavoritePlace place=new FavoritePlace(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).geometry.location.lat,allPlaces.get(getAdapterPosition()).geometry.location.lng);
                                    place.save();
-                                   //TODO add to favorite DB not find table
+                                   //TODO add to favorite DB not find tablek
                                    break;
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps
