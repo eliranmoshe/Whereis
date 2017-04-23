@@ -27,7 +27,7 @@ public class GetPlacesService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         int IsNeerBy=intent.getIntExtra("IsNeerBy",0);
         if (IsNeerBy==1) {
-            //,ake Url to local method
+            //make Url to local method
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             String PlaceKind = intent.getStringExtra("PlaceKind");

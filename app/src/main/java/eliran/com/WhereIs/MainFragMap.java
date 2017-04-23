@@ -2,6 +2,7 @@ package eliran.com.WhereIs;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -48,6 +50,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     CheckBox IsNeerByCB;
     PlaceRVadapter placeRVadapter;
     ArrayList<Place> allPlaces;
+    ProgressDialog LoadingDialog;
 
 
     public MainFragMap() {
@@ -103,19 +106,35 @@ public class MainFragMap extends Fragment implements LocationListener {
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                }
-                Intent intent = new Intent(getActivity(), GetPlacesService.class);
-                if (IsNeerBy==true) {
-                    intent.putExtra("lat", lat);
-                    intent.putExtra("lng", lng);
-                    intent.putExtra("PlaceKind", Url);
-                    intent.putExtra("IsNeerBy",1);
+                    Intent intent = new Intent(getActivity(), GetPlacesService.class);
+                    if (IsNeerBy==true) {
+                        intent.putExtra("lat", lat);
+                        intent.putExtra("lng", lng);
+                        intent.putExtra("PlaceKind", Url);
+                        intent.putExtra("IsNeerBy",1);
 
-                }else if (IsNeerBy==false){
-                    intent.putExtra("query",Url);
-                    intent.putExtra("IsNeerBy",-1);
+                    }else if (IsNeerBy==false){
+                        intent.putExtra("query",Url);
+                        intent.putExtra("IsNeerBy",-1);
+                    }
+                    LoadingDialog = new ProgressDialog(getActivity());
+                    LoadingDialog.setTitle("PLEASE WAIT");
+                    //show the dialog:
+                    LoadingDialog.show();
+
+                    getActivity().startService(intent);
+                }else {
+
+                  /*  Snackbar snackbar = Snackbar
+                            .make(v, "No City Name", Snackbar.LENGTH_LONG)
+                            .setDuration(5000);
+
+                    snackbar.show();*/
+                    Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
+
                 }
-                getActivity().startService(intent);
+
+
             }
         });
 
@@ -152,12 +171,17 @@ public class MainFragMap extends Fragment implements LocationListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             allPlaces  = intent.getParcelableArrayListExtra("response");
+            if (allPlaces.size()>0){
+
 
             placesRV.setLayoutManager(new LinearLayoutManager(context));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
-            Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();}
+            else{
+                Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
+            }
+            LoadingDialog.dismiss();
         }
     }
 }

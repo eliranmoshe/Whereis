@@ -11,17 +11,18 @@ import android.support.annotation.Nullable;
  */
 
 public class SettingPref extends PreferenceActivity {
-    public static boolean IsKM;
+    public static boolean IsMile;
+    public static SwitchPreference switchPreference;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
-        SwitchPreference switchPreference=(SwitchPreference) findPreference("DelFavoriteItem");
+        switchPreference=(SwitchPreference) findPreference("SwitchKMtoMLItem");
         switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                IsKM= (boolean) newValue;
+                IsMile= (boolean) newValue;
                 return true;
             }
         });

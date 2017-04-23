@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,6 +33,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
 
 
+
     public  PlaceRVadapter(Context c,ArrayList<Place> allPlaces,double currentLat,double currentlng){
         this.c=c;
         this.allPlaces=allPlaces;
@@ -41,6 +44,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
     public Myholder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(c).inflate(R.layout.place_item, parent,false);
         Myholder myholder = new Myholder(v);
+        MainActivity.IsFirstTime="1";
         return myholder;
     }
 
@@ -102,19 +106,32 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
         }
         public void BindData(Place place) {
-
             currentPlace=place;
+            distance = distance(currentLat, currentlng, place.geometry.location.lat, place.geometry.location.lng);
+            //add image icon to image view
+            Picasso.with(c).load(place.icon).into(itemImageIV);
+
             itemPlaceNameTV.setText(place.name);
+            //check if is local search addres or global search
             if (place.vicinity!=null){
             itemAdressTV.setText(place.vicinity);
             }else{
                 itemAdressTV.setText(place.formatted_address);
             }
+            //check if in KM or MILE
+            SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(c);
+            boolean isCecked=preferences.getBoolean("SwitchKMtoMLItem",false);
+            if (isCecked==false) {
+                //TODO whan i dont get in to settings this IsChacked==null
 
-            distance=distance(currentLat,currentlng,place.geometry.location.lat,place.geometry.location.lng);
-            String km=new DecimalFormat("##.##").format(distance);
-            itemDistanceTV.setText(km+"km");
-            Picasso.with(c).load(place.icon).into(itemImageIV);
+                String km = new DecimalFormat("##.##").format(distance);
+                itemDistanceTV.setText(km+" km");
+            }else if (isCecked==true){
+                double distanceMl=distance/1.61;
+                String ml=new DecimalFormat("##.##").format(distanceMl);
+                itemDistanceTV.setText(ml+" mile");
+            }
+
             itemImageIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,6 +142,8 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                     Log.d("hhhhhhhhhhh","");
                 }
             });
+
+
 
 
 
