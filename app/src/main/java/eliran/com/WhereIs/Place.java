@@ -53,6 +53,6 @@ public class Place implements Parcelable {
     }
 
 
-    //TODO maybe need another int to Miles
-    //TODO maybe i need to declarate ImagePath to not be a null String
+
+
 }

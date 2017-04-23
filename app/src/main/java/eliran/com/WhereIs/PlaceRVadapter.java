@@ -87,7 +87,6 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                                case R.id.AddFavoritePPItem:
                                   FavoritePlace place=new FavoritePlace(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).geometry.location.lat,allPlaces.get(getAdapterPosition()).geometry.location.lng);
                                    place.save();
-                                   //TODO add to favorite DB not find tablek
                                    break;
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps
@@ -126,8 +125,6 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(c);
             boolean isCecked=preferences.getBoolean("SwitchKMtoMLItem",false);
             if (isCecked==false) {
-                //TODO whan i dont get in to settings this IsChacked==null
-
                 String km = new DecimalFormat("##.##").format(distance);
                 itemDistanceTV.setText(km+" km");
             }else if (isCecked==true){
