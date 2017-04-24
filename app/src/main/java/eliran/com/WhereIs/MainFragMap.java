@@ -36,6 +36,7 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainFragMap extends Fragment implements LocationListener {
@@ -49,9 +50,9 @@ public class MainFragMap extends Fragment implements LocationListener {
     boolean IsNeerBy = true;
     CheckBox IsNeerByCB;
     PlaceRVadapter placeRVadapter;
-    ArrayList<Place> allPlaces;
+    ArrayList<SearchPlaceSugarOrm> allPlaces;
     ProgressDialog LoadingDialog;
-    ArrayList<Place>landPlaces;
+    ArrayList<SearchPlaceSugarOrm>landPlaces;
 
 
     public MainFragMap() {
@@ -183,7 +184,8 @@ public class MainFragMap extends Fragment implements LocationListener {
             if (allPlaces.size()>0){
 
                 for (int i=0;i<allPlaces.size();i++){
-                    SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(allPlaces.get(i).name,allPlaces.get(i).vicinity,allPlaces.get(i).icon,allPlaces.get(i).formatted_address,allPlaces.get(i).geometry.location.lat,allPlaces.get(i).geometry.location.lng);
+                    Place place= (Place) allPlaces.get(i);
+                    SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
                     searchPlaceSugarOrm.save();
                 }
             placesRV.setLayoutManager(new LinearLayoutManager(context));
@@ -205,7 +207,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             outState.putDouble("lat", 31.8903396);
             outState.putDouble("lng", 34.773063);
         }else {
-            //allPlaces=SearchPlaceSugarOrm.listAll(SearchPlaceSugarOrm.class);
+
         }
     }
 }

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder> {
     Context c;
-    ArrayList<Place> allPlaces;
+    ArrayList<SearchPlaceSugarOrm> allPlaces;
     double currentLat;
     double currentlng;
     Place currentPlace;
@@ -35,7 +35,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
 
 
-    public  PlaceRVadapter(Context c,ArrayList<Place> allPlaces,double currentLat,double currentlng){
+    public  PlaceRVadapter(Context c,ArrayList<SearchPlaceSugarOrm> allPlaces,double currentLat,double currentlng){
         this.c=c;
         this.allPlaces=allPlaces;
         this.currentLat=currentLat;
@@ -52,7 +52,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
     @Override
     public void onBindViewHolder(Myholder holder, int position) {
-        Place place=allPlaces.get(position);
+        Place place= (Place) allPlaces.get(position);
         holder.BindData(place);
 
     }
@@ -85,12 +85,13 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                        public boolean onMenuItemClick(MenuItem item) {
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
-                                  FavoritePlace place=new FavoritePlace(allPlaces.get(getAdapterPosition()).name,allPlaces.get(getAdapterPosition()).vicinity,allPlaces.get(getAdapterPosition()).icon,allPlaces.get(getAdapterPosition()).formatted_address,allPlaces.get(getAdapterPosition()).geometry.location.lat,allPlaces.get(getAdapterPosition()).geometry.location.lng);
+                                   Place p= (Place) allPlaces.get(getAdapterPosition());
+                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.geometry.location.lat,p.geometry.location.lng);
                                    place.save();
                                    break;
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps
-                                   currentPlace=allPlaces.get(getAdapterPosition());
+                                   currentPlace= (Place) allPlaces.get(getAdapterPosition());
                                    String location="https://www.google.co.il/maps/@"+currentPlace.geometry.location.lat+","+currentPlace.geometry.location.lng+",18.79z?hl=en";
                                    Intent sharingIntent=new Intent(android.content.Intent.ACTION_SEND);
                                    sharingIntent.setType("text/plain");
@@ -136,7 +137,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemImageIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentPlace=allPlaces.get(getAdapterPosition());
+                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
                     FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
                     fragmentChangerInterface.FromMainToMap(currentPlace);
 

@@ -6,6 +6,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -41,8 +47,30 @@ public class GetPlacesService extends IntentService {
             placesString=SearchByQuery(ByQueryUrl);
         }
         //get the Json string and add it to array list
-        Gson gson=new Gson();
-        PlacesList placesList=gson.fromJson(placesString,PlacesList.class);
+
+     //   placesString=placesString.replace()
+        JSONObject bigObj= null;
+
+        try {
+             bigObj = new JSONObject(placesString);
+            JSONArray results= bigObj.getJSONArray("results");
+            for(int i=0; i< results.length();i++)
+            {
+                JSONObject inner= results.getJSONObject(i);
+                inner.remove("id");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String str =  bigObj.toString();
+
+        Gson gson =new Gson();
+
+      //  jsonObj.getAsJsonObject("accounts").remove("email");
+
+        PlacesList placesList=gson.fromJson(str,PlacesList.class);
         Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
         sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
         LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
