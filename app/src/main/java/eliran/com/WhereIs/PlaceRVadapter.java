@@ -86,7 +86,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
                                    Place p= (Place) allPlaces.get(getAdapterPosition());
-                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.geometry.location.lat,p.geometry.location.lng);
+                                  FavoritePlace place=new FavoritePlace(1,p.name,p.vicinity,p.icon,p.formatted_address,p.geometry.location.lat,p.geometry.location.lng);
                                    place.save();
                                    break;
                                case R.id.SharedPlacePPItem:

@@ -33,6 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orm.SugarContext;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
         //inflate the fragment into layout
         View view = inflater.inflate(R.layout.main_frag_map, container, false);
+        SugarContext.init(getActivity().getApplicationContext());
         // make broadcast filter and listener
         PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
         IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
@@ -184,9 +187,9 @@ public class MainFragMap extends Fragment implements LocationListener {
             if (allPlaces.size()>0){
 
                 for (int i=0;i<allPlaces.size();i++){
-                    Place place= (Place) allPlaces.get(i);
-                    SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
-                    searchPlaceSugarOrm.save();
+                   // Place place= (Place) allPlaces.get(i);
+                   // FavoritePlace favoritePlace=new FavoritePlace(-1,place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                  //  favoritePlace.save();
                 }
             placesRV.setLayoutManager(new LinearLayoutManager(context));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);

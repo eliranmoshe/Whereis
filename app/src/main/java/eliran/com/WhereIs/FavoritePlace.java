@@ -13,16 +13,18 @@ public class FavoritePlace extends SugarRecord{
     String formatted_address;
     double lat;
     double lng;
+    int isFavorite;
     public FavoritePlace(){
 
     }
 
-    public FavoritePlace(String name, String vicinity, String icon, String formatted_address, double lat, double lng) {
+    public FavoritePlace(int isFavorite,String name, String vicinity, String icon, String formatted_address, double lat, double lng) {
         this.name = name;
         this.vicinity = vicinity;
         this.icon = icon;
         this.formatted_address = formatted_address;
         this.lat = lat;
         this.lng = lng;
+        this.isFavorite=isFavorite;
     }
 }

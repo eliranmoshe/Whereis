@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.orm.SugarContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +21,8 @@ import java.util.List;
 public class FavoriteFrag extends Fragment {
 
 RecyclerView favListRV;
+
+
     public FavoriteFrag() {
         // Required empty public constructor
     }
@@ -30,10 +33,18 @@ RecyclerView favListRV;
                              Bundle savedInstanceState) {
        View view=inflater.inflate(R.layout.fragment_favorite, container, false);
         SugarContext.init(getActivity().getApplicationContext());
+        List<FavoritePlace> favoritePlaces=new ArrayList<>();
         favListRV= (RecyclerView) view.findViewById(R.id.FavListRV);
         favListRV.setLayoutManager(new LinearLayoutManager(getActivity()));
         List<FavoritePlace>FavPlaces=FavoritePlace.listAll(FavoritePlace.class);
-       FavRVadapter adapter=new FavRVadapter(getActivity(),FavPlaces);
+        for (int i=0;i<FavPlaces.size();i++)
+        {
+            if (FavPlaces.get(i).isFavorite==1)
+            {
+               favoritePlaces.add(FavPlaces.get(i));
+            }
+        }
+       FavRVadapter adapter=new FavRVadapter(getActivity(),favoritePlaces);
         favListRV.setAdapter(adapter);
 
         return view;

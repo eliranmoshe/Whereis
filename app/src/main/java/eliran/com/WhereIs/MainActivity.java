@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SugarContext.init(getApplicationContext());
         //Add the main fragment to activity
 
         if(getFragmentManager().findFragmentByTag("main")== null) {
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
             getFragmentManager().beginTransaction().replace(R.id.MainContainer, mainFragMap, "main").commit();
         }
 
-        SugarContext.init(getApplicationContext());
+
 
 
         //TODO save data on screen rotation
