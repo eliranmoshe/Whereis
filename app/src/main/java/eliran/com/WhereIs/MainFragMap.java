@@ -51,6 +51,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     PlaceRVadapter placeRVadapter;
     ArrayList<Place> allPlaces;
     ProgressDialog LoadingDialog;
+    ArrayList<Place>landPlaces;
 
 
     public MainFragMap() {
@@ -67,6 +68,8 @@ public class MainFragMap extends Fragment implements LocationListener {
         PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
         IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
+
+
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -137,7 +140,13 @@ public class MainFragMap extends Fragment implements LocationListener {
 
             }
         });
-
+        if (savedInstanceState!=null){
+            placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+            landPlaces=savedInstanceState.getParcelableArrayList("landscapeArray");
+            allPlaces=landPlaces;
+            placeRVadapter = new PlaceRVadapter(getActivity(), landPlaces, savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lng"));
+            placesRV.setAdapter(placeRVadapter);
+        }
         return view;
     }
 
@@ -173,7 +182,10 @@ public class MainFragMap extends Fragment implements LocationListener {
             allPlaces  = intent.getParcelableArrayListExtra("response");
             if (allPlaces.size()>0){
 
-
+                for (int i=0;i<allPlaces.size();i++){
+                    SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(allPlaces.get(i).name,allPlaces.get(i).vicinity,allPlaces.get(i).icon,allPlaces.get(i).formatted_address,allPlaces.get(i).geometry.location.lat,allPlaces.get(i).geometry.location.lng);
+                    searchPlaceSugarOrm.save();
+                }
             placesRV.setLayoutManager(new LinearLayoutManager(context));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
@@ -182,6 +194,18 @@ public class MainFragMap extends Fragment implements LocationListener {
                 Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
             }
             //LoadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (allPlaces!=null) {
+            outState.putParcelableArrayList("landscapeArray", allPlaces);
+            outState.putDouble("lat", 31.8903396);
+            outState.putDouble("lng", 34.773063);
+        }else {
+            //allPlaces=SearchPlaceSugarOrm.listAll(SearchPlaceSugarOrm.class);
         }
     }
 }

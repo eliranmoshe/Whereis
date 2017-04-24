@@ -31,13 +31,13 @@ public class GetPlacesService extends IntentService {
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             String PlaceKind = intent.getStringExtra("PlaceKind");
-            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+31.8903396+","+34.773063+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyDo6e7ZL0HqkwaKN-GwKgqZnW03FhJNivQ";
+            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+31.8903396+","+34.773063+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
             placesString=SearchByLocation(ByLocationUrl);
 
         }else if (IsNeerBy==-1){
             //make Url to query method
             String query=intent.getStringExtra("query");
-            ByQueryUrl="https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query+"&key=AIzaSyD_n7Li_AFP079HfTTgu5y_23akynRglno";
+            ByQueryUrl="https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
             placesString=SearchByQuery(ByQueryUrl);
         }
         //get the Json string and add it to array list

@@ -3,6 +3,7 @@ package eliran.com.WhereIs;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,8 +18,11 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         setContentView(R.layout.activity_main);
 
         //Add the main fragment to activity
-         mainFragMap =new MainFragMap();
-        getFragmentManager().beginTransaction().add(R.id.MainContainer,mainFragMap).commit();
+
+        if(getFragmentManager().findFragmentByTag("main")== null) {
+            mainFragMap = new MainFragMap();
+            getFragmentManager().beginTransaction().replace(R.id.MainContainer, mainFragMap, "main").commit();
+        }
 
         SugarContext.init(getApplicationContext());
 
@@ -32,14 +36,15 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
         MapFrag mapFrag=new MapFrag();
         mapFrag.selectedPlace=currentPlace;
-        getFragmentManager().beginTransaction().addToBackStack("MapFrag").add(R.id.MainContainer,mapFrag).commit();
+
+        getFragmentManager().beginTransaction().addToBackStack("MapFrag").replace(R.id.MainContainer,mapFrag).commit();
 
     }
 
     @Override
     public void FromMainToFavorite() {
         FavoriteFrag favoriteFrag=new FavoriteFrag();
-        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag).commit();
+        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag,"map").commit();
 
     }
 
@@ -69,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     @Override
     protected void onResume() {
         super.onResume();
-        if (IsFirstTime.equals("1")) {
-            mainFragMap.placeRVadapter.notifyDataSetChanged();
+        if (getFragmentManager().findFragmentByTag("map")!= null) {
+                mainFragMap.placeRVadapter.notifyDataSetChanged();
+                Log.d("sdfdsdsd", "dsdsds");
+
             //TODO on landspace there is exeption
         }
 
