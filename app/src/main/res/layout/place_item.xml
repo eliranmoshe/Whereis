@@ -10,7 +10,7 @@
     android:weightSum="2">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1.6"
         android:orientation="vertical"
@@ -20,13 +20,9 @@
             android:id="@+id/ItemPlaceNameTV"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/ItemDistanceTV"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1.2"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/ItemAdressTV"
@@ -34,6 +30,13 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/ItemDistanceTV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            android:gravity="right" />
 
     </LinearLayout>
 

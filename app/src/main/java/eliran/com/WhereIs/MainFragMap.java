@@ -25,6 +25,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -189,6 +190,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO handle with battary chraaged
             if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED))
             {
                 int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
@@ -199,21 +201,25 @@ public class MainFragMap extends Fragment implements LocationListener {
                 boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
                 boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
                 Toast.makeText(context, ""+status, Toast.LENGTH_SHORT).show();
-            }
-            allPlaces  = intent.getParcelableArrayListExtra("response");
-            if (allPlaces.size()>0){
+            }else {
+                //make keyboard disappear after search finish
+                InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
+                allPlaces = intent.getParcelableArrayListExtra("response");
+                if (allPlaces.size() > 0) {
 
-                for (int i=0;i<allPlaces.size();i++){
-                  //  Place place= (Place) allPlaces.get(i);
-                   //  SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
-                  //  searchPlaceSugarOrm.save();
+                    for (int i = 0; i < allPlaces.size(); i++) {
+                        //  Place place= (Place) allPlaces.get(i);
+                        //  SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                        //  searchPlaceSugarOrm.save();
+                    }
+                    placesRV.setLayoutManager(new LinearLayoutManager(context));
+                    placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
+                    placesRV.setAdapter(placeRVadapter);
+                    Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
                 }
-            placesRV.setLayoutManager(new LinearLayoutManager(context));
-            placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
-            placesRV.setAdapter(placeRVadapter);
-            Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();}
-            else{
-                Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
             }
             //LoadingDialog.dismiss();
         }

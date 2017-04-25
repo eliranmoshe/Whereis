@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     @Override
     public void FromMainToFavorite() {
         FavoriteFrag favoriteFrag=new FavoriteFrag();
-        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag,"map").commit();
+        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag,"FavFrag").commit();
 
     }
 
@@ -64,7 +64,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
                 startActivity(intent);
                 break;
             case R.id.GoToFavoriteItem:
-                FromMainToFavorite();
+                if (getFragmentManager().findFragmentByTag("FavFrag")==null) {
+                    FromMainToFavorite();
+                }
         }
 
         return true;

@@ -74,6 +74,14 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemDistanceTV = (TextView) itemView.findViewById(R.id.ItemDistanceTV);
              itemAdressTV = (TextView) itemView.findViewById(R.id.ItemAdressTV);
             itemImageIV = (ImageView) itemView.findViewById(R.id.ItemImageIV);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
+                    FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
+                    fragmentChangerInterface.FromMainToMap(currentPlace);
+                }
+            });
            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                @Override
                public boolean onLongClick(View v) {
@@ -133,25 +141,9 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                 String ml=new DecimalFormat("##.##").format(distanceMl);
                 itemDistanceTV.setText(ml+" mile");
             }
-
-            itemImageIV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
-                    FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
-                    fragmentChangerInterface.FromMainToMap(currentPlace);
-
-                    Log.d("hhhhhhhhhhh","");
-                }
-            });
-
-
-
-
-
         }
     }
-
+//multiple the distance between current location to current place
     public static double distance(double lat2, double lng2, double lat1, double lng1) {
         int r = 6371; // average radius of the earth in km
         double dLat = Math.toRadians(lat2 - lat1);
