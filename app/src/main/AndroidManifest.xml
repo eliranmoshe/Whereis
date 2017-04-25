@@ -20,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".MainFragMap$PlacesBroadCastReciever">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
         <activity android:name=".SettingPref"></activity>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E"/>
         <meta-data android:name="DATABASE" android:value="FAVORITE_PLACE.db" />

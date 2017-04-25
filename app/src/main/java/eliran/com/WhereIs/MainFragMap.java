@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -72,6 +73,8 @@ public class MainFragMap extends Fragment implements LocationListener {
         PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
         IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = getActivity().registerReceiver(null, ifilter);
 
 
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
@@ -183,13 +186,24 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED))
+            {
+                int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        status == BatteryManager.BATTERY_STATUS_FULL;
+
+                int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+                boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+                boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+                Toast.makeText(context, ""+status, Toast.LENGTH_SHORT).show();
+            }
             allPlaces  = intent.getParcelableArrayListExtra("response");
             if (allPlaces.size()>0){
 
                 for (int i=0;i<allPlaces.size();i++){
-                   // Place place= (Place) allPlaces.get(i);
-                   // FavoritePlace favoritePlace=new FavoritePlace(-1,place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
-                  //  favoritePlace.save();
+                  //  Place place= (Place) allPlaces.get(i);
+                   //  SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                  //  searchPlaceSugarOrm.save();
                 }
             placesRV.setLayoutManager(new LinearLayoutManager(context));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
