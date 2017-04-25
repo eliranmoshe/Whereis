@@ -4,8 +4,13 @@
 
     <item
         android:id="@+id/SettingsItem"
-        android:title="settings" />
+        android:icon="@drawable/settingicon"
+        android:title="settings"
+        app:showAsAction="always" />
     <item
         android:id="@+id/GoToFavoriteItem"
-        android:title="GO TO FAVORITE " />
+        android:icon="@android:drawable/btn_star"
+        android:title="GO TO FAVORITE "
+        app:showAsAction="always" />
+
 </menu>

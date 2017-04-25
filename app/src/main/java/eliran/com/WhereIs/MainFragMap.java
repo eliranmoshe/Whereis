@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,9 +22,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.GridLayoutManager;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,23 +34,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.orm.SugarContext;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainFragMap extends Fragment implements LocationListener {
 
     LocationManager locationManager;
-    EditText SearchET;
-    Button SearchBtn;
     public static double lng;
     public static double lat;
     RecyclerView placesRV;
@@ -56,13 +53,11 @@ public class MainFragMap extends Fragment implements LocationListener {
     ArrayList<SearchPlaceSugarOrm> allPlaces;
     ProgressDialog LoadingDialog;
     ArrayList<SearchPlaceSugarOrm>landPlaces;
-
+    SearchView serchview;
 
     public MainFragMap() {
 
     }
-//TODO need to outo search by location
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,30 +84,22 @@ public class MainFragMap extends Fragment implements LocationListener {
             //request permission 12 is the request number
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
         }
-
-        placesRV = (RecyclerView) view.findViewById(R.id.PlacesRV);
-        SearchET = (EditText) view.findViewById(R.id.SearchPlaceET);
-        IsNeerByCB= (CheckBox) view.findViewById(R.id.LoacalSwitchCB);
-        IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (IsNeerBy==true){
-                IsNeerBy=false;}else{
-                    IsNeerBy=true;
-                }
-            }
-        });
-        SearchBtn = (Button) view.findViewById(R.id.SearchBtn);
-
-        SearchBtn.setOnClickListener(new View.OnClickListener() {
+        serchview = (SearchView) view.findViewById(R.id.searchview);
+        serchview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchet = SearchET.getText().toString();
+                serchview.setIconified(false);
+                //TODO make to not be twice X button
+            }
+        });
+        serchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
                 String Url = "";
-                searchet = searchet.trim();
-                if (searchet.length() > 0) {
+                query = query.trim();
+                if (query.length() > 0) {
                     try {
-                        Url = URLEncoder.encode(searchet, "UTF-8");
+                        Url = URLEncoder.encode(query, "UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -122,31 +109,47 @@ public class MainFragMap extends Fragment implements LocationListener {
                         intent.putExtra("lng", lng);
                         intent.putExtra("PlaceKind", Url);
                         intent.putExtra("IsNeerBy",1);
-
                     }else if (IsNeerBy==false){
                         intent.putExtra("query",Url);
                         intent.putExtra("IsNeerBy",-1);
                     }
-                 /*   LoadingDialog = new ProgressDialog(getActivity());
-                    LoadingDialog.setTitle("PLEASE WAIT");
-                    //show the dialog:
-                    LoadingDialog.show();*/
-
+               /*   LoadingDialog = new ProgressDialog(getActivity());
+                  LoadingDialog.setTitle("PLEASE WAIT");
+                  //show the dialog:
+                  LoadingDialog.show();*/
                     getActivity().startService(intent);
                 }else {
+                        /*  Snackbar snackbar = Snackbar
+                          .make(v, "No City Name", Snackbar.LENGTH_LONG)
+                          .setDuration(5000);
 
-                  /*  Snackbar snackbar = Snackbar
-                            .make(v, "No City Name", Snackbar.LENGTH_LONG)
-                            .setDuration(5000);
-
-                    snackbar.show();*/
+                          snackbar.show();*/
                     Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
 
                 }
 
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("dsds","dsdsds");
+                return true;
             }
         });
+        placesRV = (RecyclerView) view.findViewById(R.id.PlacesRV);
+        IsNeerByCB= (CheckBox) view.findViewById(R.id.LoacalSwitchCB);
+        IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (IsNeerBy==true){
+                IsNeerBy=false;
+               }else{
+                    IsNeerBy=true;
+                }
+            }
+        });
+
         if (savedInstanceState!=null){
             placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             landPlaces=savedInstanceState.getParcelableArrayList("landscapeArray");
