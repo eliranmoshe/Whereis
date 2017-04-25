@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
 
 
-        //TODO save data on screen rotation
+
     }
 
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
                 mainFragMap.placeRVadapter.notifyDataSetChanged();
                 Log.d("sdfdsdsd", "dsdsds");
 
-            //TODO on landspace there is exeption
+
         }
 
 
