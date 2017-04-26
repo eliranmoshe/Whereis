@@ -4,6 +4,8 @@ package eliran.com.WhereIs;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by eliran on 4/15/2017.
  */
@@ -16,6 +18,7 @@ public class Place implements Parcelable {
     double lat;
     double lng;
     geometry geometry;
+    ArrayList<PlacePhoto>photos;
 
     public Place(String name, String vicinity, String icon, String formatted_address, double lat, double lng) {
         this.name = name;
