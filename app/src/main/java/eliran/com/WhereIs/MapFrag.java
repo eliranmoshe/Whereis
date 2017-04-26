@@ -44,7 +44,7 @@ public  Place selectedPlace;
 
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-                LatLng latLng= new LatLng(selectedPlace.geometry.location.lat, selectedPlace.geometry.location.lng );
+                LatLng latLng= new LatLng(selectedPlace.lat, selectedPlace.lng );
                 CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng, 17);
 
 

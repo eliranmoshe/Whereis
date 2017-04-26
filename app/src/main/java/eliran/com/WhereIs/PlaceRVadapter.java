@@ -22,11 +22,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder> {
     Context c;
-    ArrayList<SearchPlaceSugarOrm> allPlaces;
+    List<Place> allPlaces;
     double currentLat;
     double currentlng;
     Place currentPlace;
@@ -35,7 +36,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
 
 
 
-    public  PlaceRVadapter(Context c,ArrayList<SearchPlaceSugarOrm> allPlaces,double currentLat,double currentlng){
+    public  PlaceRVadapter(Context c,List<Place> allPlaces,double currentLat,double currentlng){
         this.c=c;
         this.allPlaces=allPlaces;
         this.currentLat=currentLat;
@@ -45,7 +46,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
     public Myholder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(c).inflate(R.layout.place_item, parent,false);
         Myholder myholder = new Myholder(v);
-        MainActivity.IsFirstTime="1";
+
         SugarContext.init(c);
         return myholder;
     }
@@ -94,7 +95,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
                                    Place p= (Place) allPlaces.get(getAdapterPosition());
-                                  FavoritePlace place=new FavoritePlace(1,p.name,p.vicinity,p.icon,p.formatted_address,p.geometry.location.lat,p.geometry.location.lng);
+                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.lat,p.lng);
                                    place.save();
                                    break;
                                case R.id.SharedPlacePPItem:
@@ -119,7 +120,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         }
         public void BindData(Place place) {
             currentPlace=place;
-            distance = distance(currentLat, currentlng, place.geometry.location.lat, place.geometry.location.lng);
+            distance = distance(currentLat, currentlng, place.lat, place.lng);
             //add image icon to image view
             Picasso.with(c).load(place.icon).into(itemImageIV);
 

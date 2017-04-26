@@ -9,16 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -31,15 +27,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Toast;
 import com.orm.SugarContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainFragMap extends Fragment implements LocationListener {
@@ -51,9 +46,9 @@ public class MainFragMap extends Fragment implements LocationListener {
     boolean IsNeerBy = true;
     CheckBox IsNeerByCB;
     PlaceRVadapter placeRVadapter;
-    ArrayList<SearchPlaceSugarOrm> allPlaces;
+    ArrayList<Place> allPlaces;
     ProgressDialog LoadingDialog;
-    ArrayList<SearchPlaceSugarOrm>landPlaces;
+    ArrayList<Place>landPlaces;
     SearchView serchview;
 
     public MainFragMap() {
@@ -118,6 +113,8 @@ public class MainFragMap extends Fragment implements LocationListener {
                   LoadingDialog.setTitle("PLEASE WAIT");
                   //show the dialog:
                   LoadingDialog.show();*/
+                    LastSearch lastSearch=new LastSearch(query);
+                    lastSearch.save();
                     getActivity().startService(intent);
                 }else {
                         /*  Snackbar snackbar = Snackbar
@@ -191,6 +188,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO handle with battary chraaged
+            SugarContext.init(getActivity());
             if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED))
             {
                 int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
@@ -202,16 +200,19 @@ public class MainFragMap extends Fragment implements LocationListener {
                 boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
                 Toast.makeText(context, ""+status, Toast.LENGTH_SHORT).show();
             }else {
+
                 //make keyboard disappear after search finish
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
                 allPlaces = intent.getParcelableArrayListExtra("response");
                 if (allPlaces.size() > 0) {
-
+                   //List<SearchPlace> deleteList=SearchPlace.listAll(SearchPlace.class);
+                    SearchPlace.deleteAll(SearchPlace.class);
                     for (int i = 0; i < allPlaces.size(); i++) {
-                        //  Place place= (Place) allPlaces.get(i);
-                        //  SearchPlaceSugarOrm searchPlaceSugarOrm=new SearchPlaceSugarOrm(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
-                        //  searchPlaceSugarOrm.save();
+                        MainActivity.IsFirstTime="1";
+                         Place place= (Place) allPlaces.get(i);
+                        SearchPlace searchPlaceSugarOrm=new SearchPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                       searchPlaceSugarOrm.save();
                     }
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
@@ -234,6 +235,22 @@ public class MainFragMap extends Fragment implements LocationListener {
             outState.putDouble("lng", 34.773063);
         }else {
 
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MainActivity.IsFirstTime=="1")
+         {
+            List<SearchPlace>BackList=SearchPlace.listAll(SearchPlace.class);
+            List<Place> allPlaces = new ArrayList<>();
+            for (int i = 0; i < BackList.size(); i++) {
+                allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng));
+            }
+            placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+            placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, 34.456468, 32.48486);
+            placesRV.setAdapter(placeRVadapter);
         }
     }
 }

@@ -39,10 +39,9 @@ RecyclerView favListRV;
         List<FavoritePlace>FavPlaces=FavoritePlace.listAll(FavoritePlace.class);
         for (int i=0;i<FavPlaces.size();i++)
         {
-            if (FavPlaces.get(i).isFavorite==1)
-            {
+
                favoritePlaces.add(FavPlaces.get(i));
-            }
+
         }
        FavRVadapter adapter=new FavRVadapter(getActivity(),favoritePlaces);
         favListRV.setAdapter(adapter);

@@ -71,6 +71,11 @@ public class GetPlacesService extends IntentService {
       //  jsonObj.getAsJsonObject("accounts").remove("email");
 
         PlacesList placesList=gson.fromJson(str,PlacesList.class);
+        for (int i=0;i<placesList.results.size();i++)
+        {
+            placesList.results.get(i).lat=placesList.results.get(i).geometry.location.lat;
+            placesList.results.get(i).lng=placesList.results.get(i).geometry.location.lng;
+        }
         Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
         sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
         LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
