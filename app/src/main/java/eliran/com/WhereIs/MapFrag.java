@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class MapFrag extends Fragment {
 public  Place selectedPlace;
+    double lat;
+    double lng;
 
 
     public MapFrag() {
@@ -32,9 +34,10 @@ public  Place selectedPlace;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_map, container, false);
 
+        final LatLng[] latLng = new LatLng[1];
          MapFragment mapFragment= new MapFragment();
         getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFragment).commit();
 
@@ -43,13 +46,24 @@ public  Place selectedPlace;
             public void onMapReady(GoogleMap googleMap) {
 
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-                LatLng latLng= new LatLng(selectedPlace.lat, selectedPlace.lng );
-                CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                if (selectedPlace!=null) {
+                    if (savedInstanceState != null) {
+                        lat = savedInstanceState.getDouble("lat");
+                        lng = savedInstanceState.getDouble("lng");
+                        latLng[0] = new LatLng(lat, lng);
+                    } else {
+                        lat = selectedPlace.lat;
+                        lng = selectedPlace.lng;
+                        latLng[0] = new LatLng(lat, lng);
+                    }
+                }else {
+                    latLng[0] = new LatLng(31.8948203, 34.8092537);
+                }
+                CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng[0], 17);
 
 
                 googleMap.addMarker(new MarkerOptions()
-                        .position(latLng)
+                        .position(latLng[0])
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 googleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(MainFragMap.lat,MainFragMap.lng))
@@ -62,4 +76,10 @@ public  Place selectedPlace;
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putDouble("lat",lat);
+        outState.putDouble("lng",lng);
+        super.onSaveInstanceState(outState);
+    }
 }

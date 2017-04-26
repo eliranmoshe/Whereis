@@ -8,11 +8,15 @@ import com.orm.SugarRecord;
 
 public class LastSearch extends SugarRecord {
     String LastSearch;
+    String IsBeerBySearch;
 
     public LastSearch() {
     }
 
-    public LastSearch(String lastSearch) {
+    public LastSearch(String lastSearch, String isBeerBySearch) {
         LastSearch = lastSearch;
+        IsBeerBySearch = isBeerBySearch;
     }
+
+
 }

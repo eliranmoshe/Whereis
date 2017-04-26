@@ -37,7 +37,7 @@ public class GetPlacesService extends IntentService {
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             String PlaceKind = intent.getStringExtra("PlaceKind");
-            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+31.8903396+","+34.773063+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
+            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
             placesString=SearchByLocation(ByLocationUrl);
 
         }else if (IsNeerBy==-1){
