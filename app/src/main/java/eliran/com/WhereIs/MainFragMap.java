@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -68,7 +69,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
 
 
-
+        //request location permission
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -126,7 +127,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
                     getActivity().startService(intent);
                 }else {
-                        /*  Snackbar snackbar = Snackbar
+                         /* Snackbar snackbar = Snackbar
                           .make(v, "No City Name", Snackbar.LENGTH_LONG)
                           .setDuration(5000);
 
@@ -207,11 +208,11 @@ public class MainFragMap extends Fragment implements LocationListener {
                 allPlaces = intent.getParcelableArrayListExtra("response");
                 if (allPlaces.size() > 0) {
                    //List<SearchPlace> deleteList=SearchPlace.listAll(SearchPlace.class);
-                    SearchPlace.deleteAll(SearchPlace.class);
+                    SugarPlace.deleteAll(SugarPlace.class);
                     for (int i = 0; i < allPlaces.size(); i++) {
                       //  MainActivity.IsFirstTime="1";
                          Place place= (Place) allPlaces.get(i);
-                        SearchPlace searchPlaceSugarOrm=new SearchPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                        SugarPlace searchPlaceSugarOrm=new SugarPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
                        searchPlaceSugarOrm.save();
                     }
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
@@ -242,7 +243,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     public void onResume() {
         super.onResume();
         if(MainActivity.IsFirstTime) {
-            List<SearchPlace> BackList = SearchPlace.listAll(SearchPlace.class);
+            List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             if (BackList.size() != 0) {
                 if (!new CheckConnection(getActivity()).isNetworkAvailable()) {
                     //Toast.makeText(InternetSearchAct.this, "no internet connection", Toast.LENGTH_SHORT).show();
@@ -255,7 +256,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                     placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
                     placesRV.setAdapter(placeRVadapter);
-                } else {
+                }/* else {
                     LastSearch lastSearch = LastSearch.last(LastSearch.class);
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
                     if (lastSearch.IsBeerBySearch.equals("1")) {
@@ -270,10 +271,11 @@ public class MainFragMap extends Fragment implements LocationListener {
                     getActivity().startService(intent);
                     Log.d("fasdfsd", "fdsfsd");
 
-                }
+                }*/
             }
-        }else{
-            List<SearchPlace> BackList = SearchPlace.listAll(SearchPlace.class);
+        }
+        //else{
+            List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             List<Place> allPlaces = new ArrayList<>();
             for (int i = 0; i < BackList.size(); i++) {
                 allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng));
@@ -281,6 +283,6 @@ public class MainFragMap extends Fragment implements LocationListener {
             placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
-        }
+       // }
     }
 }

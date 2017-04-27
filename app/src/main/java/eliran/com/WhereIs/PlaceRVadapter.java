@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -75,6 +76,9 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemDistanceTV = (TextView) itemView.findViewById(R.id.ItemDistanceTV);
              itemAdressTV = (TextView) itemView.findViewById(R.id.ItemAdressTV);
             itemImageIV = (ImageView) itemView.findViewById(R.id.ItemImageIV);
+           // CardView cardView= (CardView) itemView.findViewById(R.id.cardview);
+          //  cardView.setRadius(9);
+           // cardView.setPreventCornerOverlap(cardView.getPreventCornerOverlap());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,9 +128,12 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             //add image icon to image view
             if (place.photos!= null && place.photos.get(0)!=null) {
                 Picasso.with(c).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=" + place.photos.get(0).photo_reference + "&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E").into(itemImageIV);
+
             }
             else{
-                itemImageIV.setImageResource(R.drawable.searchbtn);
+                Picasso.with(c).load(place.icon).into(itemImageIV);
+
+
             }
 
             itemPlaceNameTV.setText(place.name);
