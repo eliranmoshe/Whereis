@@ -212,11 +212,22 @@ public class MainFragMap extends Fragment implements LocationListener {
                     for (int i = 0; i < allPlaces.size(); i++) {
                       //  MainActivity.IsFirstTime="1";
                          Place place= (Place) allPlaces.get(i);
-                        SugarPlace searchPlaceSugarOrm=new SugarPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng);
+                        //check if get photo reference from JSON
+                        if (place.photos==null)
+                        {
+                            allPlaces.get(i).photo_reference="";
+                            place.photos=new ArrayList<>();
+                            PlacePhoto placePhoto=new PlacePhoto();
+                            placePhoto.photo_reference="";
+                            place.photos.add(placePhoto);
+                        }
+                        //save search list to DATABASE
+                        SugarPlace searchPlaceSugarOrm=new SugarPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng,place.photos.get(0).photo_reference);
                        searchPlaceSugarOrm.save();
                     }
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
+                    //TODO check allplace.photo_reference why its null
                     placesRV.setAdapter(placeRVadapter);
                     Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
                 } else {
@@ -251,7 +262,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
                     List<Place> allPlaces = new ArrayList<>();
                     for (int i = 0; i < BackList.size(); i++) {
-                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng));
+                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng,BackList.get(i).photo_reference));
                     }
                     placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
@@ -278,7 +289,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             List<Place> allPlaces = new ArrayList<>();
             for (int i = 0; i < BackList.size(); i++) {
-                allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng));
+                allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng,BackList.get(i).photo_reference));
             }
             placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);

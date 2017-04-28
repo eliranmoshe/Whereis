@@ -17,20 +17,18 @@ public class Place implements Parcelable {
     String formatted_address;
     double lat;
     double lng;
+    String photo_reference;
     geometry geometry;
     ArrayList<PlacePhoto>photos;
 
-    public Place(String name, String vicinity, String icon, String formatted_address, double lat, double lng) {
+    public Place(String name, String vicinity, String icon, String formatted_address, double lat, double lng, String photo_reference) {
         this.name = name;
         this.vicinity = vicinity;
         this.icon = icon;
         this.formatted_address = formatted_address;
         this.lat = lat;
         this.lng = lng;
-
-    }
-
-    public Place() {
+        this.photo_reference = photo_reference;
     }
 
 
@@ -41,6 +39,7 @@ public class Place implements Parcelable {
         formatted_address = in.readString();
         lat = in.readDouble();
         lng = in.readDouble();
+        photo_reference = in.readString();
     }
 
     public static final Creator<Place> CREATOR = new Creator<Place>() {
@@ -68,5 +67,6 @@ public class Place implements Parcelable {
         dest.writeString(formatted_address);
         dest.writeDouble(lat);
         dest.writeDouble(lng);
+        dest.writeString(photo_reference);
     }
 }

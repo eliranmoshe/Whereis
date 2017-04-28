@@ -126,14 +126,11 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             currentPlace=place;
             distance = distance(currentLat, currentlng, place.lat, place.lng);
             //add image icon to image view
-            if (place.photos!= null && place.photos.get(0)!=null) {
-                Picasso.with(c).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=" + place.photos.get(0).photo_reference + "&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E").into(itemImageIV);
-
+            if (place.photo_reference.equals("")) {
+                Picasso.with(c).load(place.icon).into(itemImageIV);
             }
             else{
-                Picasso.with(c).load(place.icon).into(itemImageIV);
-
-
+                Picasso.with(c).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=" + place.photo_reference + "&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E").into(itemImageIV);
             }
 
             itemPlaceNameTV.setText(place.name);
