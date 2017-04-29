@@ -44,7 +44,6 @@ public class MainFragMap extends Fragment implements LocationListener {
     public static double lng;
     public static double lat;
     RecyclerView placesRV;
-    boolean IsNeerBy = true;
     CheckBox IsNeerByCB;
     PlaceRVadapter placeRVadapter;
     ArrayList<Place> allPlaces;
@@ -102,7 +101,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                         e.printStackTrace();
                     }
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
-                    if (IsNeerBy==true) {
+                    if (!IsNeerByCB.isChecked()) {
                         LastSearch lastSearch = new LastSearch(query,"1");
                         lastSearch.save();
                     }else {
@@ -110,12 +109,12 @@ public class MainFragMap extends Fragment implements LocationListener {
                         lastSearch.save();
                     }
 
-                    if (IsNeerBy==true) {
+                    if (!IsNeerByCB.isChecked()) {
                         intent.putExtra("lat", lat);
                         intent.putExtra("lng", lng);
                         intent.putExtra("PlaceKind", Url);
                         intent.putExtra("IsNeerBy",1);
-                    }else if (IsNeerBy==false){
+                    }else if (IsNeerByCB.isChecked()){
                         intent.putExtra("query",Url);
                         intent.putExtra("IsNeerBy",-1);
                     }
@@ -150,11 +149,6 @@ public class MainFragMap extends Fragment implements LocationListener {
         IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (IsNeerBy==true){
-                IsNeerBy=false;
-               }else{
-                    IsNeerBy=true;
-                }
             }
         });
 
@@ -205,26 +199,17 @@ public class MainFragMap extends Fragment implements LocationListener {
                 //make keyboard disappear after search finish
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
-                allPlaces = intent.getParcelableArrayListExtra("response");
-                if (allPlaces.size() > 0) {
-                   //List<SearchPlace> deleteList=SearchPlace.listAll(SearchPlace.class);
-                    SugarPlace.deleteAll(SugarPlace.class);
-                    for (int i = 0; i < allPlaces.size(); i++) {
-                      //  MainActivity.IsFirstTime="1";
-                         Place place= (Place) allPlaces.get(i);
-                        //check if get photo reference from JSON
-                        if (place.photos==null)
-                        {
-                            allPlaces.get(i).photo_reference="";
-                            place.photos=new ArrayList<>();
-                            PlacePhoto placePhoto=new PlacePhoto();
-                            placePhoto.photo_reference="";
-                            place.photos.add(placePhoto);
-                        }
-                        //save search list to DATABASE
-                        SugarPlace searchPlaceSugarOrm=new SugarPlace(place.name,place.vicinity,place.icon,place.formatted_address,place.geometry.location.lat,place.geometry.location.lng,place.photos.get(0).photo_reference);
-                       searchPlaceSugarOrm.save();
+            List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
+
+
+                if (!intent.getBooleanExtra("IsZeroResults",false)) {
+                    allPlaces=new ArrayList<>();
+                    for (int i = 0; i <BackList.size() ; i++) {
+                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng,BackList.get(i).photo_reference));
                     }
+                        //save search list to DATABASE
+
+
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
                     //TODO check allplace.photo_reference why its null
@@ -241,6 +226,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //TODO not alwayes work good
         if (allPlaces!=null) {
             outState.putParcelableArrayList("landscapeArray", allPlaces);
             outState.putDouble("lat", lat);
@@ -267,7 +253,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                     placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
                     placesRV.setAdapter(placeRVadapter);
-                }/* else {
+                } else {
                     LastSearch lastSearch = LastSearch.last(LastSearch.class);
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
                     if (lastSearch.IsBeerBySearch.equals("1")) {
@@ -282,10 +268,11 @@ public class MainFragMap extends Fragment implements LocationListener {
                     getActivity().startService(intent);
                     Log.d("fasdfsd", "fdsfsd");
 
-                }*/
+                }
             }
         }
-        //else{
+        else{
+
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             List<Place> allPlaces = new ArrayList<>();
             for (int i = 0; i < BackList.size(); i++) {
@@ -294,6 +281,6 @@ public class MainFragMap extends Fragment implements LocationListener {
             placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
-       // }
+        }
     }
 }

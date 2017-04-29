@@ -8,12 +8,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.orm.SugarContext;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,13 +39,13 @@ public class GetPlacesService extends IntentService {
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             String PlaceKind = intent.getStringExtra("PlaceKind");
-            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
+            ByLocationUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=5000&keyword="+PlaceKind+"&key=AIzaSyCdoGZBMRm9a1L24ql92c4ddS8cTIJUGcU";
             placesString=SearchByLocation(ByLocationUrl);
 
         }else if (IsNeerBy==-1){
             //make Url to query method
             String query=intent.getStringExtra("query");
-            ByQueryUrl="https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query+"&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E";
+            ByQueryUrl="https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query+"&key=AIzaSyCdoGZBMRm9a1L24ql92c4ddS8cTIJUGcU";
             placesString=SearchByQuery(ByQueryUrl);
         }
         //get the Json string and add it to array list
@@ -68,19 +70,49 @@ public class GetPlacesService extends IntentService {
 
         Gson gson =new Gson();
 
-      //  jsonObj.getAsJsonObject("accounts").remove("email");
-
         PlacesList placesList=gson.fromJson(str,PlacesList.class);
-        for (int i=0;i<placesList.results.size();i++)
+       /* for (int i=0;i<placesList.results.size();i++)
         {
             placesList.results.get(i).lat=placesList.results.get(i).geometry.location.lat;
             placesList.results.get(i).lng=placesList.results.get(i).geometry.location.lng;
         }
-        Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
-        sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
 
+
+    }*/
+        SugarContext.init(this);
+        Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
+       //TODO check if ZERO RESULT
+        if (placesList.results.size()!=0)
+        {
+            sendBroadcastIntent.putExtra("IsZeroResults",false);
+            SugarPlace.deleteAll(SugarPlace.class);
+        }else {
+            sendBroadcastIntent.putExtra("IsZeroResults",true);
+        }
+        for (int i = 0; i <placesList.results.size() ; i++)
+        {
+            if (placesList.results.get(i).photos==null)
+            {
+                placesList.results.get(i).photos=new ArrayList<>();
+                placesList.results.get(i).photos.add(new PlacePhoto());
+                placesList.results.get(i).photos.get(0).photo_reference="";
+            }
+            SugarPlace sugarPlace=new SugarPlace(placesList.results.get(i).name,placesList.results.get(i).vicinity,placesList.results.get(i).icon,placesList.results.get(i).formatted_address,placesList.results.get(i).geometry.location.lat,placesList.results.get(i).geometry.location.lng,placesList.results.get(i).photos.get(0).photo_reference);
+            sugarPlace.save();
+        }
+
+
+        //sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
     }
+
+
+
+
+
+
+
+
     public String SearchByLocation(String bylocationurl){
         //go to web to get json by searching local
         OkHttpClient client = new OkHttpClient();
