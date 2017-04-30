@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
         MapFrag mapFrag=new MapFrag();
         mapFrag.selectedPlace=currentPlace;
+        mapFrag.mylng=mainFragMap.lng;
+        mapFrag.mylat=mainFragMap.lat;
 
         getFragmentManager().beginTransaction().addToBackStack("MapFrag").replace(R.id.MainContainer,mapFrag).commit();
 
