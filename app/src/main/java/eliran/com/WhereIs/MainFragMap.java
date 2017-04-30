@@ -9,12 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +27,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +57,10 @@ public class MainFragMap extends Fragment implements LocationListener {
     ArrayList<Place>landPlaces;
     SearchView serchview;
     public static boolean IsSavedInstanceState=false;
-
+    RadioButton radioButton;
+    boolean LOCATION_SERVICE_ON;
+    PlacesBroadCastReciever placesBroadCastReciever;
+    IntentFilter intentFilter;
 
     public MainFragMap() {
 
@@ -65,8 +73,8 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         SugarContext.init(getActivity());
         // make broadcast filter and listener
-        PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
-        IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
+        placesBroadCastReciever = new PlacesBroadCastReciever();
+        intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
 //TODO last known location
 /*if(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
@@ -157,6 +165,18 @@ public class MainFragMap extends Fragment implements LocationListener {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             }
         });
+       radioButton= (RadioButton) view.findViewById(R.id.radioButton);
+        radioButton.setChecked(true);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LOCATION_SERVICE_ON==false)
+                {
+                    getActivity().startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+
+            }
+        });
 
         if (savedInstanceState!=null){
             placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -185,12 +205,57 @@ public class MainFragMap extends Fragment implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
+        if(Build.VERSION.SDK_INT>=21)
+        {
 
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+
+                            new int[]{-android.R.attr.state_enabled}, //disabled
+                            new int[]{android.R.attr.state_enabled} //enabled
+                    },
+                    new int[] {
+
+                            Color.GREEN //disabled
+                            ,Color.GREEN //enabled
+
+                    }
+            );
+
+
+            radioButton.setButtonTintList(colorStateList);//set the color tint list
+            radioButton.setText("LOCATION SERVICE: ON");
+            radioButton.invalidate(); //could not be necessary
+            LOCATION_SERVICE_ON=true;
+        }
     }
 
     @Override
     public void onProviderDisabled(String provider) {
+        if(Build.VERSION.SDK_INT>=21)
+        {
 
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+
+                            new int[]{-android.R.attr.state_enabled}, //disabled
+                            new int[]{android.R.attr.state_enabled} //enabled
+                    },
+                    new int[] {
+
+                            Color.RED //disabled
+                            ,Color.RED //enabled
+
+                    }
+            );
+
+
+            radioButton.setButtonTintList(colorStateList);//set the color tint list
+            radioButton.setTextSize(15);
+            radioButton.setText("LOCATION SERVICE: OFF\n (open settings)");
+            radioButton.invalidate(); //could not be necessary
+            LOCATION_SERVICE_ON=false;
+        }
     }
 
 
@@ -256,7 +321,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     @Override
     public void onResume() {
         super.onResume();
-
+        getActivity().registerReceiver(placesBroadCastReciever,intentFilter);
         if(MainActivity.IsFirstTime) {
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
                 if (BackList.size() != 0) {
@@ -299,5 +364,11 @@ public class MainFragMap extends Fragment implements LocationListener {
             placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
             placesRV.setAdapter(placeRVadapter);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(placesBroadCastReciever);
     }
 }

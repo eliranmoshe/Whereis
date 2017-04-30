@@ -114,6 +114,7 @@ registerReceiver(battaryListener,ifilter);
 
 
 
+
     }
 
     @Override
@@ -143,4 +144,5 @@ registerReceiver(battaryListener,ifilter);
         super.onPause();
         unregisterReceiver(battaryListener);
     }
+
 }
