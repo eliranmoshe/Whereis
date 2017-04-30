@@ -107,6 +107,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                                    //share the current location on googleMaps
                                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
                                    String location="https://www.google.co.il/maps/@"+currentPlace.lat+","+currentPlace.lng+",18.79z?hl=en";
+                                   //
                                    Intent sharingIntent=new Intent(android.content.Intent.ACTION_SEND);
                                    sharingIntent.setType("text/plain");
                                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "place Details");
