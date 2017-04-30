@@ -26,6 +26,7 @@ public class GetPlacesService extends IntentService {
     String placesString;
     String ByLocationUrl;
     String ByQueryUrl;
+    Intent sendBroadcastIntent;
 
     public GetPlacesService() {
         super("GetPlacesService");
@@ -65,12 +66,15 @@ public class GetPlacesService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        sendBroadcastIntent = new Intent("intent.to.MainFragment.FINISH_PLACES");
+        if (bigObj.toString()!=null) {
+            sendBroadcastIntent.putExtra("JSON_IS_NULL",false);
+            String str = bigObj.toString();
 
-        String str =  bigObj.toString();
 
-        Gson gson =new Gson();
+            Gson gson = new Gson();
 
-        PlacesList placesList=gson.fromJson(str,PlacesList.class);
+            PlacesList placesList = gson.fromJson(str, PlacesList.class);
        /* for (int i=0;i<placesList.results.size();i++)
         {
             placesList.results.get(i).lat=placesList.results.get(i).geometry.location.lat;
@@ -79,31 +83,29 @@ public class GetPlacesService extends IntentService {
 
 
     }*/
-        SugarContext.init(this);
-        Intent sendBroadcastIntent=new Intent("intent.to.MainFragment.FINISH_PLACES");
-       //TODO check if ZERO RESULT
-        if (placesList.results.size()!=0)
-        {
-            sendBroadcastIntent.putExtra("IsZeroResults",false);
-            SugarPlace.deleteAll(SugarPlace.class);
-        }else {
-            sendBroadcastIntent.putExtra("IsZeroResults",true);
-        }
-        for (int i = 0; i <placesList.results.size() ; i++)
-        {
-            if (placesList.results.get(i).photos==null)
-            {
-                placesList.results.get(i).photos=new ArrayList<>();
-                placesList.results.get(i).photos.add(new PlacePhoto());
-                placesList.results.get(i).photos.get(0).photo_reference="";
+            SugarContext.init(this);
+            //TODO check if ZERO RESULT
+            if (placesList.results.size() != 0) {
+                sendBroadcastIntent.putExtra("IsZeroResults", false);
+                SugarPlace.deleteAll(SugarPlace.class);
+            } else {
+                sendBroadcastIntent.putExtra("IsZeroResults", true);
             }
-            SugarPlace sugarPlace=new SugarPlace(placesList.results.get(i).name,placesList.results.get(i).vicinity,placesList.results.get(i).icon,placesList.results.get(i).formatted_address,placesList.results.get(i).geometry.location.lat,placesList.results.get(i).geometry.location.lng,placesList.results.get(i).photos.get(0).photo_reference);
-            sugarPlace.save();
+            for (int i = 0; i < placesList.results.size(); i++) {
+                if (placesList.results.get(i).photos == null) {
+                    placesList.results.get(i).photos = new ArrayList<>();
+                    placesList.results.get(i).photos.add(new PlacePhoto());
+                    placesList.results.get(i).photos.get(0).photo_reference = "";
+                }
+                SugarPlace sugarPlace = new SugarPlace(placesList.results.get(i).name, placesList.results.get(i).vicinity, placesList.results.get(i).icon, placesList.results.get(i).formatted_address, placesList.results.get(i).geometry.location.lat, placesList.results.get(i).geometry.location.lng, placesList.results.get(i).photos.get(0).photo_reference);
+                sugarPlace.save();
+            }
+        }else{
+            sendBroadcastIntent.putExtra("JSON_IS_NULL",true);
         }
 
+            LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
 
-        //sendBroadcastIntent.putParcelableArrayListExtra("response",placesList.results);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
     }
 
 

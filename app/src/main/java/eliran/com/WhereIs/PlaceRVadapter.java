@@ -90,6 +90,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                @Override
                public boolean onLongClick(View v) {
+                   currentPlace= (Place) allPlaces.get(getAdapterPosition());
                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(c, v);
                    popupMenu.inflate(R.menu.popup_menu);
                    popupMenu.show();
@@ -105,7 +106,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps
                                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
-                                   String location="https://www.google.co.il/maps/@"+currentPlace.geometry.location.lat+","+currentPlace.geometry.location.lng+",18.79z?hl=en";
+                                   String location="https://www.google.co.il/maps/@"+currentPlace.lat+","+currentPlace.lng+",18.79z?hl=en";
                                    Intent sharingIntent=new Intent(android.content.Intent.ACTION_SEND);
                                    sharingIntent.setType("text/plain");
                                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "place Details");

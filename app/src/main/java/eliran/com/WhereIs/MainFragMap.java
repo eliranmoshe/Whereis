@@ -40,6 +40,7 @@ import java.util.List;
 
 public class MainFragMap extends Fragment implements LocationListener {
 
+    View view;
     LocationManager locationManager;
     public static double lng;
     public static double lat;
@@ -50,6 +51,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     ProgressDialog LoadingDialog;
     ArrayList<Place>landPlaces;
     SearchView serchview;
+    public static boolean IsSavedInstanceState=false;
 
 
     public MainFragMap() {
@@ -59,15 +61,19 @@ public class MainFragMap extends Fragment implements LocationListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //inflate the fragment into layout
-        View view = inflater.inflate(R.layout.main_frag_map, container, false);
+         view = inflater.inflate(R.layout.main_frag_map, container, false);
 
         SugarContext.init(getActivity());
         // make broadcast filter and listener
         PlacesBroadCastReciever placesBroadCastReciever = new PlacesBroadCastReciever();
         IntentFilter intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
-
-
+//TODO last known location
+/*if(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
+            currentLocation =locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }else{
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }*/
         //request location permission
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
@@ -158,6 +164,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             allPlaces=landPlaces;
             placeRVadapter = new PlaceRVadapter(getActivity(), landPlaces, savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lng"));
             placesRV.setAdapter(placeRVadapter);
+            MainActivity.IsFirstTime=false;
         }
         return view;
     }
@@ -201,13 +208,13 @@ public class MainFragMap extends Fragment implements LocationListener {
                 mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
 
-
-                if (!intent.getBooleanExtra("IsZeroResults",false)) {
-                    allPlaces=new ArrayList<>();
-                    for (int i = 0; i <BackList.size() ; i++) {
-                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng,BackList.get(i).photo_reference));
+            if (!intent.getBooleanExtra("JSON_IS_NULL",false)) {
+                if (!intent.getBooleanExtra("IsZeroResults", false)) {
+                    allPlaces = new ArrayList<>();
+                    for (int i = 0; i < BackList.size(); i++) {
+                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng, BackList.get(i).photo_reference));
                     }
-                        //save search list to DATABASE
+                    //save search list to DATABASE
 
 
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
@@ -218,6 +225,14 @@ public class MainFragMap extends Fragment implements LocationListener {
                 } else {
                     Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
                 }
+            }else {
+                //TODO snack bar
+              /*  Snackbar snackbar = Snackbar
+                        .make(view, "No City Name", Snackbar.LENGTH_LONG)
+                        .setDuration(5000);
+
+                snackbar.show();*/
+            }
             }
             //LoadingDialog.dismiss();
 
@@ -231,6 +246,8 @@ public class MainFragMap extends Fragment implements LocationListener {
             outState.putParcelableArrayList("landscapeArray", allPlaces);
             outState.putDouble("lat", lat);
             outState.putDouble("lng", lng);
+            IsSavedInstanceState=true;
+
         }else {
 
         }
@@ -239,37 +256,37 @@ public class MainFragMap extends Fragment implements LocationListener {
     @Override
     public void onResume() {
         super.onResume();
+
         if(MainActivity.IsFirstTime) {
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
-            if (BackList.size() != 0) {
-                if (!new CheckConnection(getActivity()).isNetworkAvailable()) {
-                    //Toast.makeText(InternetSearchAct.this, "no internet connection", Toast.LENGTH_SHORT).show();
-
-
-                    List<Place> allPlaces = new ArrayList<>();
-                    for (int i = 0; i < BackList.size(); i++) {
-                        allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng,BackList.get(i).photo_reference));
-                    }
-                    placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
-                    placesRV.setAdapter(placeRVadapter);
-                } else {
-                    LastSearch lastSearch = LastSearch.last(LastSearch.class);
-                    Intent intent = new Intent(getActivity(), GetPlacesService.class);
-                    if (lastSearch.IsBeerBySearch.equals("1")) {
-                        intent.putExtra("lat", lat);
-                        intent.putExtra("lng", lng);
-                        intent.putExtra("PlaceKind", lastSearch.LastSearch);
-                        intent.putExtra("IsNeerBy", 1);
+                if (BackList.size() != 0) {
+                    if (!new CheckConnection(getActivity()).isNetworkAvailable()) {
+                        Toast.makeText(getActivity(), "no internet connection", Toast.LENGTH_SHORT).show();
+                        List<Place> allPlaces = new ArrayList<>();
+                        for (int i = 0; i < BackList.size(); i++) {
+                            allPlaces.add(new Place(BackList.get(i).name, BackList.get(i).vicinity, BackList.get(i).icon, BackList.get(i).formatted_address, BackList.get(i).lat, BackList.get(i).lng, BackList.get(i).photo_reference));
+                        }
+                        placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
+                        placesRV.setAdapter(placeRVadapter);
                     } else {
-                        intent.putExtra("query", lastSearch.LastSearch);
-                        intent.putExtra("IsNeerBy", -1);
-                    }
-                    getActivity().startService(intent);
-                    Log.d("fasdfsd", "fdsfsd");
+                        Toast.makeText(getActivity(), "internet is on going to service", Toast.LENGTH_SHORT).show();
+                        LastSearch lastSearch = LastSearch.last(LastSearch.class);
+                        Intent intent = new Intent(getActivity(), GetPlacesService.class);
+                        if (lastSearch.IsBeerBySearch.equals("1")) {
+                            intent.putExtra("lat", lat);
+                            intent.putExtra("lng", lng);
+                            intent.putExtra("PlaceKind", lastSearch.LastSearch);
+                            intent.putExtra("IsNeerBy", 1);
+                        } else {
+                            intent.putExtra("query", lastSearch.LastSearch);
+                            intent.putExtra("IsNeerBy", -1);
+                        }
+                        getActivity().startService(intent);
+                        Log.d("fasdfsd", "fdsfsd");
 
+                    }
                 }
-            }
         }
         else{
 
