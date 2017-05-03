@@ -52,7 +52,7 @@ RecyclerView favListRV;
         return view;
     }
     class DeleteReciver extends BroadcastReceiver{
-
+        //reciver Broadcast from favorite adapter to notify the adapter
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra("IsDelete",false))

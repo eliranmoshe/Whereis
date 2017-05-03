@@ -57,6 +57,7 @@ Context context;
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    //delete current favorite place with alert dialog
                     AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     alert.setMessage("ARE YOU SURE YOU WANT TO DELETE THIS PLACE???")
                             .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
@@ -70,6 +71,8 @@ Context context;
                                     Intent intent=new Intent("DELETE_FAVPLACE_FINISH");
                                     intent.putExtra("IsDelete",true);
                                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+
                                     dialog.cancel();
                                 }
                             })
