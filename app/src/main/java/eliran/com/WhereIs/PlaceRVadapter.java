@@ -1,17 +1,11 @@
 package eliran.com.WhereIs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.orm.SugarContext;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -100,7 +92,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
                                    Place p= (Place) allPlaces.get(getAdapterPosition());
-                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.lat,p.lng);
+                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.lat,p.lng,p.photo_reference);
                                    place.save();
                                    break;
                                case R.id.SharedPlacePPItem:
@@ -126,13 +118,13 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         }
         public void BindData(Place place) {
             currentPlace=place;
-            distance = distance(currentLat, currentlng, place.lat, place.lng);
+            distance = Functions.distance(currentLat, currentlng, place.lat, place.lng);
             //add image icon to image view
             if (place.photo_reference.equals("")) {
-                Picasso.with(c).load(place.icon).into(itemImageIV);
+itemImageIV.setImageBitmap(Functions.decodeBase64(place.icon));
             }
             else{
-                Picasso.with(c).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=" + place.photo_reference + "&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E").into(itemImageIV);
+               itemImageIV.setImageBitmap(Functions.decodeBase64(place.photo_reference));
             }
 
             itemPlaceNameTV.setText(place.name);
@@ -156,17 +148,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         }
     }
 //multiple the distance between current location to current place
-    public static double distance(double lat2, double lng2, double lat1, double lng1) {
-        int r = 6371; // average radius of the earth in km
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lng2 - lng1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = r * c;
-        return d;
-    }
+
 
 
 }

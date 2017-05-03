@@ -2,13 +2,12 @@ package eliran.com.WhereIs;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.orm.SugarContext;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +26,8 @@ public class GetPlacesService extends IntentService {
     String ByLocationUrl;
     String ByQueryUrl;
     Intent sendBroadcastIntent;
+    Bitmap Imagebitmap;
+    Bitmap IconBitMap;
 
     public GetPlacesService() {
         super("GetPlacesService");
@@ -97,13 +98,22 @@ public class GetPlacesService extends IntentService {
                     placesList.results.get(i).photos.add(new PlacePhoto());
                     placesList.results.get(i).photos.get(0).photo_reference = "";
                 }
-                SugarPlace sugarPlace = new SugarPlace(placesList.results.get(i).name, placesList.results.get(i).vicinity, placesList.results.get(i).icon, placesList.results.get(i).formatted_address, placesList.results.get(i).geometry.location.lat, placesList.results.get(i).geometry.location.lng, placesList.results.get(i).photos.get(0).photo_reference);
+                //save image to BitMap with Picasso
+                try {
+                    Imagebitmap=Picasso.with(this).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=" +  placesList.results.get(i).photos.get(0).photo_reference + "&key=AIzaSyD55SV1_lthkEcI24oLQJ1QWV1q8NcLD5E").get();
+                    IconBitMap=Picasso.with(this).load(placesList.results.get(i).icon).get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //Save last search history to DB
+                SugarPlace sugarPlace = new SugarPlace(placesList.results.get(i).name, placesList.results.get(i).vicinity, Functions.encodeToBase64(IconBitMap,Bitmap.CompressFormat.JPEG, 100), placesList.results.get(i).formatted_address, placesList.results.get(i).geometry.location.lat, placesList.results.get(i).geometry.location.lng, Functions.encodeToBase64(Imagebitmap, Bitmap.CompressFormat.JPEG, 100));
                 sugarPlace.save();
             }
         }else{
             sendBroadcastIntent.putExtra("JSON_IS_NULL",true);
         }
-
+        //send broadcast to MainFragMap
             LocalBroadcastManager.getInstance(this).sendBroadcast(sendBroadcastIntent);
 
     }
@@ -155,6 +165,8 @@ public class GetPlacesService extends IntentService {
         }
         return placesString;
     }
+
+
 
 
 }

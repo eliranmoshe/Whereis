@@ -272,6 +272,8 @@ public class MainFragMap extends Fragment implements LocationListener {
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
+            //TODO sort order by distance
+            //List<SugarPlace> notes = SugarPlace.findWithQuery(SugarPlace.class, "SELECT * FROM SugarPlace ORDER BY lat DESC", null);
 
             if (!intent.getBooleanExtra("JSON_IS_NULL",false)) {
                 if (!intent.getBooleanExtra("IsZeroResults", false)) {
