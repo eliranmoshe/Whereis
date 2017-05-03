@@ -26,7 +26,12 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.util.Log;
@@ -55,7 +60,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     ArrayList<Place> allPlaces;
     ProgressDialog LoadingDialog;
     ArrayList<Place>landPlaces;
-    SearchView serchview;
+   // SearchView serchview;
     public static boolean IsSavedInstanceState=false;
     RadioButton radioButton;
     boolean LOCATION_SERVICE_ON;
@@ -83,6 +88,31 @@ public class MainFragMap extends Fragment implements LocationListener {
             currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }*/
         //request location permission
+        ArrayList<LastSearch> lastSearchList= (ArrayList<LastSearch>) LastSearch.listAll(LastSearch.class);
+        ArrayList<String> allLasts=new ArrayList<String>();
+        for (int i = 0; i <lastSearchList.size() ; i++) {
+            allLasts.add(lastSearchList.get(i).LastSearch);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, allLasts);
+        AutoCompleteTextView textView = (AutoCompleteTextView) view
+                .findViewById(R.id.editText1);
+        textView.setAdapter(adapter);
+        textView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -95,6 +125,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             //request permission 12 is the request number
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
         }
+        /*
         serchview = (SearchView) view.findViewById(R.id.searchview);
         serchview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +167,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                   LoadingDialog.setTitle("PLEASE WAIT");
                   //show the dialog:
                   LoadingDialog.show();*/
-
+/*
 
                     getActivity().startService(intent);
                 }else {
@@ -145,19 +176,17 @@ public class MainFragMap extends Fragment implements LocationListener {
                           .setDuration(5000);
 
                           snackbar.show();*/
-                    Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
+                /*    Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
 
                 }
 
                 return true;
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Log.d("dsds","dsdsds");
-                return true;
-            }
+
         });
+
+        */
         placesRV = (RecyclerView) view.findViewById(R.id.PlacesRV);
         IsNeerByCB= (CheckBox) view.findViewById(R.id.LoacalSwitchCB);
         IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -270,7 +299,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
                 //make keyboard disappear after search finish
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
+             //   mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             //TODO sort order by distance
             //List<SugarPlace> notes = SugarPlace.findWithQuery(SugarPlace.class, "SELECT * FROM SugarPlace ORDER BY lat DESC", null);
