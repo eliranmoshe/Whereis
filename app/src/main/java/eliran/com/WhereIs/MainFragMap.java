@@ -75,7 +75,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                              Bundle savedInstanceState) {
         //inflate the fragment into layout
          view = inflater.inflate(R.layout.main_frag_map, container, false);
-
+//
         SugarContext.init(getActivity());
         // make broadcast filter and listener
         placesBroadCastReciever = new PlacesBroadCastReciever();
