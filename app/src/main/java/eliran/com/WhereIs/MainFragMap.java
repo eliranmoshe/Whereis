@@ -273,7 +273,6 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            //TODO handle with battary chraaged
             SugarContext.init(getActivity());
             LoadingDialog.dismiss();
                 //make keyboard disappear after search finish
@@ -294,14 +293,12 @@ public class MainFragMap extends Fragment implements LocationListener {
 
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
-                    //TODO check allplace.photo_reference why its null
                     placesRV.setAdapter(placeRVadapter);
                     Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
                 }
             }else {
-                //TODO snack bar
                 Snackbar snackbar = Snackbar
                         .make(view, "No City Name", Snackbar.LENGTH_LONG)
                         .setDuration(5000);
@@ -316,7 +313,6 @@ public class MainFragMap extends Fragment implements LocationListener {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //TODO not alwayes work good
         if (allPlaces!=null) {
             outState.putParcelableArrayList("landscapeArray", allPlaces);
             outState.putDouble("lat", lat);

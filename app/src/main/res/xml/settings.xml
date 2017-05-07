@@ -4,11 +4,9 @@
         android:defaultValue="false"
         android:key="SwitchKMtoMLItem"
         android:title="@string/SwitchKMtoMLItem" />
-    <EditTextPreference
-        android:autoText="false"
-        android:defaultValue="false"
+
+    <Preference
+
         android:key="DelFavoriteItem"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="R U SURE " />
+        android:title="DELETE ALL FAVORITE PLACES" ></Preference>
 </PreferenceScreen>

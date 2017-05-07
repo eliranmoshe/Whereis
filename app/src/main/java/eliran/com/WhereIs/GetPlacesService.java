@@ -85,7 +85,6 @@ public class GetPlacesService extends IntentService {
 
     }*/
             SugarContext.init(this);
-            //TODO check if ZERO RESULT
             if (placesList.results.size() != 0) {
                 sendBroadcastIntent.putExtra("IsZeroResults", false);
                 SugarPlace.deleteAll(SugarPlace.class);
