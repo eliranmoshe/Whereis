@@ -24,8 +24,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingPref"></activity>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB-5ouC8zRtBmVBzmnfYTHD8MwfsT8cC0o"/>
+        <activity android:name="eliran.com.WhereIs.Instruments.SettingPref"></activity>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCdoGZBMRm9a1L24ql92c4ddS8cTIJUGcU"/>
         <meta-data android:name="DATABASE" android:value="FAVORITE_PLACE.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

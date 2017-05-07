@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:weightSum="2"
     android:layoutDirection="ltr"
-    tools:context="eliran.com.WhereIs.FavoriteFrag">
+    tools:context="eliran.com.WhereIs.Frags.FavoriteFrag">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

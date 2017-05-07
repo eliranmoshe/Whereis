@@ -4,8 +4,10 @@
 
     <item
         android:id="@+id/SharedPlacePPItem"
+        android:icon="?attr/actionModeShareDrawable"
         android:title="@string/SharedPlace" />
     <item
         android:id="@+id/AddFavoritePPItem"
+        android:icon="@android:drawable/btn_star"
         android:title="@string/AddFavoritePPItem" />
 </menu>

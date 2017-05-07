@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Instruments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +9,9 @@ import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
+
+import eliran.com.WhereIs.Objects.FavoritePlace;
+import eliran.com.WhereIs.R;
 
 
 /**

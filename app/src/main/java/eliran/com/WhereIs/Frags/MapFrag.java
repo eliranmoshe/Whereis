@@ -1,14 +1,11 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Frags;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,21 +15,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+
+import eliran.com.WhereIs.Objects.Place;
+import eliran.com.WhereIs.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MapFrag extends Fragment {
-public  Place selectedPlace;
-    double lat;
-    double lng;
-    double mylat;
-    double mylng;
-    LatLng latLng;
-    CameraUpdate update;
+    public Place selectedPlace;
+    public double mylat;
+    public double mylng;
+    private double lat;
+    private  double lng;
+    private LatLng latLng;
+    private CameraUpdate update;
 
 
     public MapFrag() {
@@ -59,15 +57,15 @@ public  Place selectedPlace;
                         mylat=savedInstanceState.getDouble("mylat");
                         mylng=savedInstanceState.getDouble("mylng");
                     } else {
-                        lat = selectedPlace.lat;
-                        lng = selectedPlace.lng;
+                        lat = selectedPlace.getLat();
+                        lng = selectedPlace.getLng();
 
                     }
                 }else {
                     //Toast.makeText(getActivity(), "no place", Toast.LENGTH_SHORT).show();
                 }
                 if (selectedPlace!=null) {
-                    latLng = new LatLng(selectedPlace.lat, selectedPlace.lng);
+                    latLng = new LatLng(selectedPlace.getLat(), selectedPlace.getLng());
 
                 }else {
                     latLng=new LatLng(MainFragMap.lat,MainFragMap.lng);

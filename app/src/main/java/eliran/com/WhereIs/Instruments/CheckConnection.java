@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Instruments;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

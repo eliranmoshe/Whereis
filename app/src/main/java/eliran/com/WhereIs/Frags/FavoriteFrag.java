@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Frags;
 
 
 import android.content.BroadcastReceiver;
@@ -19,14 +19,18 @@ import com.orm.SugarContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import eliran.com.WhereIs.Adapters.FavRVadapter;
+import eliran.com.WhereIs.Objects.FavoritePlace;
+import eliran.com.WhereIs.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavoriteFrag extends Fragment {
 
-    RecyclerView favListRV;
-    FavRVadapter adapter;
+    private RecyclerView favListRV;
+    private FavRVadapter adapter;
 
 
     public FavoriteFrag() {}

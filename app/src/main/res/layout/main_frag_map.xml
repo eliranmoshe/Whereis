@@ -6,7 +6,7 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:weightSum="2"
-    tools:context="eliran.com.WhereIs.MainFragMap">
+    tools:context="eliran.com.WhereIs.Frags.MainFragMap">
 
 
     <LinearLayout
@@ -35,13 +35,11 @@
                 android:orientation="horizontal"
                 android:weightSum="5">
 
-              <SearchView
+                <SearchView
                     android:id="@+id/searchview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                     />
-
+                    android:background="@android:color/transparent" />
 
 
             </LinearLayout>
@@ -60,18 +58,18 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:text="@string/LocalCB"
-                app:buttonTint="@android:color/background_dark" />
+                android:buttonTint="@android:color/background_dark"
+                android:text="@string/LocalCB" />
 
             <RadioButton
                 android:id="@+id/radioButton"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:text="LOCATION SERVICE: OFF"
-                android:textSize="12sp"
-                app:buttonTint="@android:color/holo_green_light"
-                app:buttonTintMode="src_in" />
+                android:buttonTint="@android:color/holo_green_light"
+                android:buttonTintMode="src_in"
+                android:text="LOCATION SERVICE"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>

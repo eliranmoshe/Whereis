@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import eliran.com.WhereIs.Objects.FavoritePlace;
+import eliran.com.WhereIs.Instruments.Functions;
+import eliran.com.WhereIs.R;
+
 /**
  * Created by eliran on 4/23/2017.
  */
 
 public class FavRVadapter extends RecyclerView.Adapter<FavRVadapter.MyViewHolder> {
-    Context context;
-    List<FavoritePlace> favPlaces;
+   private Context context;
+    private List<FavoritePlace> favPlaces;
 
     public FavRVadapter(Context context, List<FavoritePlace> favPlaces) {
         this.context = context;
@@ -95,17 +98,17 @@ public class FavRVadapter extends RecyclerView.Adapter<FavRVadapter.MyViewHolder
         }
 
         public void BindData(FavoritePlace place){
-            if (place.photo_reference.equals(""))
+            if (place.getPhoto_reference().equals(""))
             {
-                itemImageIV.setImageBitmap(Functions.decodeBase64(place.icon));
+                itemImageIV.setImageBitmap(Functions.decodeBase64(place.getIcon()));
             }else {
-                itemImageIV.setImageBitmap(Functions.decodeBase64(place.photo_reference));
+                itemImageIV.setImageBitmap(Functions.decodeBase64(place.getPhoto_reference()));
             }
-            itemPlaceNameTV.setText(place.name);
-            if (place.vicinity!=null){
-                itemAdressTV.setText(place.vicinity);
+            itemPlaceNameTV.setText(place.getName());
+            if (place.getVicinity()!=null){
+                itemAdressTV.setText(place.getVicinity());
             }else{
-                itemAdressTV.setText(place.formatted_address);
+                itemAdressTV.setText(place.getFormatted_address());
             }
         }
     }

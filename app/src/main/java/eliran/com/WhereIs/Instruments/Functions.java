@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Instruments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

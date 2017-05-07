@@ -1,5 +1,7 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Instruments;
 
+
+import eliran.com.WhereIs.Objects.Place;
 
 public interface FragmentChangerInterface {
 

@@ -1,4 +1,4 @@
-package eliran.com.WhereIs;
+package eliran.com.WhereIs.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,13 @@ import com.orm.SugarContext;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import eliran.com.WhereIs.Objects.FavoritePlace;
+import eliran.com.WhereIs.Objects.Place;
+import eliran.com.WhereIs.Instruments.FragmentChangerInterface;
+import eliran.com.WhereIs.Instruments.Functions;
+import eliran.com.WhereIs.MainActivity;
+import eliran.com.WhereIs.R;
 
 
 public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder> {
@@ -91,6 +98,7 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(c, v);
                    popupMenu.inflate(R.menu.popup_menu);
+
                    popupMenu.show();
                    popupMenu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
                        @Override
@@ -98,13 +106,13 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
                            switch (item.getItemId()){
                                case R.id.AddFavoritePPItem:
                                    Place p= (Place) allPlaces.get(getAdapterPosition());
-                                  FavoritePlace place=new FavoritePlace(p.name,p.vicinity,p.icon,p.formatted_address,p.lat,p.lng,p.photo_reference);
+                                  FavoritePlace place=new FavoritePlace(p.getName(),p.getVicinity(),p.getIcon(),p.getFormatted_address(),p.getLat(),p.getLng(),p.getPhoto_reference());
                                    place.save();
                                    break;
                                case R.id.SharedPlacePPItem:
                                    //share the current location on googleMaps
                                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
-                                   String location="https://www.google.co.il/maps/@"+currentPlace.lat+","+currentPlace.lng+",18.79z?hl=en";
+                                   String location="https://www.google.co.il/maps/@"+currentPlace.getLat()+","+currentPlace.getLng()+",18.79z?hl=en";
                                    //
                                    Intent sharingIntent=new Intent(android.content.Intent.ACTION_SEND);
                                    sharingIntent.setType("text/plain");
@@ -124,21 +132,21 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
         }
         public void BindData(Place place) {
             currentPlace=place;
-            distance = Functions.distance(currentLat, currentlng, place.lat, place.lng);
+            distance = Functions.distance(currentLat, currentlng, place.getLat(), place.getLng());
             //add image icon to image view
-            if (place.photo_reference.equals("")) {
-itemImageIV.setImageBitmap(Functions.decodeBase64(place.icon));
+            if (place.getPhoto_reference().equals("")) {
+itemImageIV.setImageBitmap(Functions.decodeBase64(place.getIcon()));
             }
             else{
-               itemImageIV.setImageBitmap(Functions.decodeBase64(place.photo_reference));
+               itemImageIV.setImageBitmap(Functions.decodeBase64(place.getPhoto_reference()));
             }
 
-            itemPlaceNameTV.setText(place.name);
+            itemPlaceNameTV.setText(place.getName());
             //check if is local search addres or global search
-            if (place.vicinity!=null){
-            itemAdressTV.setText(place.vicinity);
+            if (place.getVicinity()!=null){
+            itemAdressTV.setText(place.getVicinity());
             }else{
-                itemAdressTV.setText(place.formatted_address);
+                itemAdressTV.setText(place.getVicinity());
             }
             //check if in KM or MILE
             SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(c);
