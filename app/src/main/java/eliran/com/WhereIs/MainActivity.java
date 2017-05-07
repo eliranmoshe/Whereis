@@ -14,6 +14,14 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.orm.SugarContext;
 
 import java.util.ArrayList;
@@ -74,15 +82,47 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public void FromMainToFavorite() {
-        FavoriteFrag favoriteFrag=new FavoriteFrag();
-        getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag,"FavFrag").commit();
-
+        if (IsLargeDevice==true) {
+            FavoriteFrag favoriteFrag = new FavoriteFrag();
+            getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.LargeMainContainer, favoriteFrag, "FavFrag").commit();
+        }else {
+            FavoriteFrag favoriteFrag = new FavoriteFrag();
+            getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer, favoriteFrag, "FavFrag").commit();
+        }
     }
 
     @Override
     public void FromLargeMainToMap() {
         mapFrag=new MapFrag();
         getFragmentManager().beginTransaction().replace(R.id.MapContainer,mapFrag,"map").commit();
+    }
+
+    @Override
+    public void InflateMapFragment(final Place place) {
+        MapFragment mapFragment= new MapFragment();
+        getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFragment).commit();
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                LatLng latLng= new LatLng(place.lat, place.lng );
+                CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng, 17);
+
+
+                googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                googleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(MainFragMap.lat,MainFragMap.lng))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+
+                googleMap.moveCamera(update);
+            }
+        });
     }
 
 

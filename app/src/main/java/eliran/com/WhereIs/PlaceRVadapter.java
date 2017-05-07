@@ -74,9 +74,15 @@ public class PlaceRVadapter extends RecyclerView.Adapter<PlaceRVadapter.Myholder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentPlace= (Place) allPlaces.get(getAdapterPosition());
+                    currentPlace = (Place) allPlaces.get(getAdapterPosition());
                     FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) c;
-                    fragmentChangerInterface.FromMainToMap(currentPlace);
+                    if (MainActivity.IsLargeDevice==true)
+                    {
+                        fragmentChangerInterface.InflateMapFragment(currentPlace);
+                    }else {
+
+                        fragmentChangerInterface.FromMainToMap(currentPlace);
+                    }
                 }
             });
            itemView.setOnLongClickListener(new View.OnLongClickListener() {
