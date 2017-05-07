@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class FavRVadapter extends RecyclerView.Adapter<FavRVadapter.MyViewHolder> {
-Context context;
+    Context context;
     List<FavoritePlace> favPlaces;
 
     public FavRVadapter(Context context, List<FavoritePlace> favPlaces) {

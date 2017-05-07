@@ -25,14 +25,11 @@ import java.util.List;
  */
 public class FavoriteFrag extends Fragment {
 
-RecyclerView favListRV;
+    RecyclerView favListRV;
     FavRVadapter adapter;
 
 
-    public FavoriteFrag() {
-        // Required empty public constructor
-    }
-
+    public FavoriteFrag() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

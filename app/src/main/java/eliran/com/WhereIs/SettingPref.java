@@ -23,6 +23,7 @@ public class SettingPref extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+        //set the new value off the KM to MILE CHeckBOx
         switchPreference=(SwitchPreference) findPreference("SwitchKMtoMLItem");
         switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -31,7 +32,7 @@ public class SettingPref extends PreferenceActivity {
                 return true;
             }
         });
-
+        //AlertDialog to dell All Favorite
         Preference preference=findPreference("DelFavoriteItem");
         preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

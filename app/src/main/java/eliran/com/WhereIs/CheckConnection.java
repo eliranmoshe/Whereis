@@ -10,7 +10,7 @@ import android.net.NetworkInfo;
 
 public class CheckConnection {
     private Context context;
-
+    //check if there is a internet connaction
     public CheckConnection(Context context) {
         this.context = context;
     }

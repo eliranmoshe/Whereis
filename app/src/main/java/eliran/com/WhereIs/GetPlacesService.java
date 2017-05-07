@@ -74,16 +74,8 @@ public class GetPlacesService extends IntentService {
 
 
             Gson gson = new Gson();
-
+            //check if there is a results
             PlacesList placesList = gson.fromJson(str, PlacesList.class);
-       /* for (int i=0;i<placesList.results.size();i++)
-        {
-            placesList.results.get(i).lat=placesList.results.get(i).geometry.location.lat;
-            placesList.results.get(i).lng=placesList.results.get(i).geometry.location.lng;
-        }
-
-
-    }*/
             SugarContext.init(this);
             if (placesList.results.size() != 0) {
                 sendBroadcastIntent.putExtra("IsZeroResults", false);
@@ -91,6 +83,7 @@ public class GetPlacesService extends IntentService {
             } else {
                 sendBroadcastIntent.putExtra("IsZeroResults", true);
             }
+            //add the results array to DATABASE
             for (int i = 0; i < placesList.results.size(); i++) {
                 if (placesList.results.get(i).photos == null) {
                     placesList.results.get(i).photos = new ArrayList<>();
