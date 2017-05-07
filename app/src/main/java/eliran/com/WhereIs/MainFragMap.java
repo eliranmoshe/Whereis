@@ -60,7 +60,7 @@ public class MainFragMap extends Fragment implements LocationListener {
     ArrayList<Place> allPlaces;
     ProgressDialog LoadingDialog;
     ArrayList<Place>landPlaces;
-   // SearchView serchview;
+    SearchView serchview;
     public static boolean IsSavedInstanceState=false;
     RadioButton radioButton;
     boolean LOCATION_SERVICE_ON;
@@ -88,28 +88,6 @@ public class MainFragMap extends Fragment implements LocationListener {
             currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }*/
         //request location permission
-        ArrayList<LastSearch> lastSearchList= (ArrayList<LastSearch>) LastSearch.listAll(LastSearch.class);
-        ArrayList<String> allLasts=new ArrayList<String>();
-        for (int i = 0; i <lastSearchList.size() ; i++) {
-            allLasts.add(lastSearchList.get(i).LastSearch);
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, allLasts);
-        AutoCompleteTextView textView = (AutoCompleteTextView) view
-                .findViewById(R.id.editText1);
-        textView.setAdapter(adapter);
-        textView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
 
@@ -125,7 +103,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             //request permission 12 is the request number
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
         }
-        /*
+
         serchview = (SearchView) view.findViewById(R.id.searchview);
         serchview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,44 +127,46 @@ public class MainFragMap extends Fragment implements LocationListener {
                     if (!IsNeerByCB.isChecked()) {
                         LastSearch lastSearch = new LastSearch(query,"1");
                         lastSearch.save();
-                    }else {
-                        LastSearch lastSearch=new LastSearch(query,"-1");
-                        lastSearch.save();
-                    }
-
-                    if (!IsNeerByCB.isChecked()) {
                         intent.putExtra("lat", lat);
                         intent.putExtra("lng", lng);
                         intent.putExtra("PlaceKind", Url);
                         intent.putExtra("IsNeerBy",1);
-                    }else if (IsNeerByCB.isChecked()){
+                    }else {
+                        LastSearch lastSearch=new LastSearch(query,"-1");
+                        lastSearch.save();
                         intent.putExtra("query",Url);
                         intent.putExtra("IsNeerBy",-1);
                     }
-               /*   LoadingDialog = new ProgressDialog(getActivity());
+                  LoadingDialog = new ProgressDialog(getActivity());
                   LoadingDialog.setTitle("PLEASE WAIT");
+                    LoadingDialog.setCancelable(false);
                   //show the dialog:
-                  LoadingDialog.show();*/
-/*
+                  LoadingDialog.show();
+
 
                     getActivity().startService(intent);
                 }else {
-                         /* Snackbar snackbar = Snackbar
-                          .make(v, "No City Name", Snackbar.LENGTH_LONG)
+                          Snackbar snackbar = Snackbar
+                          .make(view, "No City Name", Snackbar.LENGTH_LONG)
                           .setDuration(5000);
 
-                          snackbar.show();*/
-                /*    Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
+                          snackbar.show();
+                    Toast.makeText(getActivity(), "PLEASE ENTER PLACE NAME", Toast.LENGTH_SHORT).show();
 
                 }
 
                 return true;
             }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+
 
         });
 
-        */
+
         placesRV = (RecyclerView) view.findViewById(R.id.PlacesRV);
         IsNeerByCB= (CheckBox) view.findViewById(R.id.LoacalSwitchCB);
         IsNeerByCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -295,8 +275,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         public void onReceive(Context context, Intent intent) {
             //TODO handle with battary chraaged
             SugarContext.init(getActivity());
-
-
+            LoadingDialog.dismiss();
                 //make keyboard disappear after search finish
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
              //   mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
@@ -323,11 +302,11 @@ public class MainFragMap extends Fragment implements LocationListener {
                 }
             }else {
                 //TODO snack bar
-              /*  Snackbar snackbar = Snackbar
+                Snackbar snackbar = Snackbar
                         .make(view, "No City Name", Snackbar.LENGTH_LONG)
                         .setDuration(5000);
 
-                snackbar.show();*/
+                snackbar.show();
             }
             }
             //LoadingDialog.dismiss();
@@ -354,6 +333,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         super.onResume();
         getActivity().registerReceiver(placesBroadCastReciever,intentFilter);
         if(MainActivity.IsFirstTime) {
+
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
                 if (BackList.size() != 0) {
                     if (!new CheckConnection(getActivity()).isNetworkAvailable()) {
@@ -366,8 +346,14 @@ public class MainFragMap extends Fragment implements LocationListener {
                         placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
                         placesRV.setAdapter(placeRVadapter);
                     } else {
-                        Toast.makeText(getActivity(), "internet is on going to service", Toast.LENGTH_SHORT).show();
                         LastSearch lastSearch = LastSearch.last(LastSearch.class);
+                        LoadingDialog = new ProgressDialog(getActivity());
+                        LoadingDialog.setTitle("PLEASE WAIT\n loading places for "+lastSearch.LastSearch);
+                        LoadingDialog.setCancelable(false);
+                        //show the dialog:
+                        LoadingDialog.show();
+                       // Toast.makeText(getActivity(), "internet is on going to service", Toast.LENGTH_SHORT).show();
+
                         Intent intent = new Intent(getActivity(), GetPlacesService.class);
                         if (lastSearch.IsBeerBySearch.equals("1")) {
                             intent.putExtra("lat", lat);
@@ -385,7 +371,10 @@ public class MainFragMap extends Fragment implements LocationListener {
                 }
         }
         else{
-
+            if (MainActivity.IsLargeDevice==true) {
+                FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) getActivity();
+                fragmentChangerInterface.FromLargeMainToMap();
+            }
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
             List<Place> allPlaces = new ArrayList<>();
             for (int i = 0; i < BackList.size(); i++) {

@@ -22,9 +22,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements FragmentChangerInterface{
     MainFragMap mainFragMap;
     public static boolean IsFirstTime;
-    public  static boolean IsLargeDevice=false;
+    public static boolean IsLargeDevice=false;
     BattaryListener battaryListener;
     IntentFilter ifilter;
+    MapFrag mapFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         LinearLayout linearLayout= (LinearLayout) findViewById(R.id.MapContainer);
         if (linearLayout!=null){
             IsLargeDevice=true;
-            MapFrag mapFrag=new MapFrag();
+            mapFrag=new MapFrag();
             getFragmentManager().beginTransaction().replace(R.id.MapContainer,mapFrag,"map").commit();
         }
         //Add the main fragment to activity
@@ -62,12 +63,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     @Override
     public void FromMainToMap(Place currentPlace) {
 
-        MapFrag mapFrag=new MapFrag();
-        mapFrag.selectedPlace=currentPlace;
-        mapFrag.mylng=mainFragMap.lng;
-        mapFrag.mylat=mainFragMap.lat;
+            MapFrag mapFrag = new MapFrag();
+            mapFrag.selectedPlace = currentPlace;
+            mapFrag.mylng = mainFragMap.lng;
+            mapFrag.mylat = mainFragMap.lat;
 
-        getFragmentManager().beginTransaction().addToBackStack("MapFrag").replace(R.id.MainContainer,mapFrag).commit();
+            getFragmentManager().beginTransaction().addToBackStack("MapFrag").replace(R.id.MainContainer, mapFrag).commit();
 
     }
 
@@ -76,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         FavoriteFrag favoriteFrag=new FavoriteFrag();
         getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.MainContainer,favoriteFrag,"FavFrag").commit();
 
+    }
+
+    @Override
+    public void FromLargeMainToMap() {
+        mapFrag=new MapFrag();
+        getFragmentManager().beginTransaction().replace(R.id.MapContainer,mapFrag,"map").commit();
     }
 
 
@@ -94,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
                 startActivity(intent);
                 break;
             case R.id.GoToFavoriteItem:
+                if (IsLargeDevice==true){
+
+                }
                 if (getFragmentManager().findFragmentByTag("FavFrag")==null) {
                     FromMainToFavorite();
                 }

@@ -31,6 +31,8 @@ public  Place selectedPlace;
     double lng;
     double mylat;
     double mylng;
+    LatLng latLng;
+    CameraUpdate update;
 
 
     public MapFrag() {
@@ -42,9 +44,7 @@ public  Place selectedPlace;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_map, container, false);
-
-        final LatLng[] latLng = new LatLng[2];
-         MapFragment mapFragment= new MapFragment();
+        MapFragment mapFragment= new MapFragment();
         getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFragment).commit();
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -64,25 +64,27 @@ public  Place selectedPlace;
 
                     }
                 }else {
-                    Toast.makeText(getActivity(), "no place", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "no place", Toast.LENGTH_SHORT).show();
                 }
-                latLng[0] = new LatLng(lat, lng);
-                latLng[1] = new LatLng(mylat, mylng);
-                CameraUpdate update= CameraUpdateFactory.newLatLngZoom(latLng[0], 17);
+                if (selectedPlace!=null) {
+                    latLng = new LatLng(selectedPlace.lat, selectedPlace.lng);
 
-
+                }else {
+                    latLng=new LatLng(MainFragMap.lat,MainFragMap.lng);
+                }
+                update = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                 googleMap.addMarker(new MarkerOptions()
-                        .position(latLng[0])
+                        .position(latLng)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 googleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(MainFragMap.lat,MainFragMap.lng))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                Polyline polyline=googleMap.addPolyline(new PolylineOptions().add(latLng[0],latLng[1]).width(5).color(Color.BLUE));
 
 
                 googleMap.moveCamera(update);
             }
         });
+
         return view;
     }
 
@@ -95,3 +97,6 @@ public  Place selectedPlace;
         super.onSaveInstanceState(outState);
     }
 }
+
+
+
