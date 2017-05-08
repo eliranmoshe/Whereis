@@ -41,11 +41,14 @@ import com.orm.SugarContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import eliran.com.WhereIs.Instruments.CheckConnection;
 import eliran.com.WhereIs.Instruments.FragmentChangerInterface;
 import eliran.com.WhereIs.GetPlacesService;
+import eliran.com.WhereIs.Instruments.Functions;
 import eliran.com.WhereIs.Objects.LastSearch;
 import eliran.com.WhereIs.MainActivity;
 import eliran.com.WhereIs.Objects.Place;
@@ -291,6 +294,18 @@ public class MainFragMap extends Fragment implements LocationListener {
                         allPlaces.add(new Place(BackList.get(i).getName(), BackList.get(i).getVicinity(), BackList.get(i).getIcon(), BackList.get(i).getFormatted_address(), BackList.get(i).getLat(), BackList.get(i).getLng(), BackList.get(i).getPhoto_reference()));
                     }
                     //save search list to DATABASE
+
+                    ArrayList<Place>byDistance = new ArrayList<>();
+                    byDistance.addAll(allPlaces);
+                    Collections.sort(allPlaces, new Comparator<Place>() {
+
+                        @Override
+                        public int compare(Place p1, Place p2) {
+                            double distance1 = Functions.distance(p1.getLat(),p1.getLng(),lat,lng);
+                            double distance2 = Functions.distance(p2.getLat(),p2.getLng(),lat,lng);
+                            return Double.compare(distance1,distance2);
+                        }
+                    });
 
 
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
