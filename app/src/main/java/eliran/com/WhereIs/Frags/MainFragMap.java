@@ -402,5 +402,8 @@ public class MainFragMap extends Fragment implements LocationListener {
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(placesBroadCastReciever);
+
+        allPlaces=null;
+        placeRVadapter=null;
     }
 }
