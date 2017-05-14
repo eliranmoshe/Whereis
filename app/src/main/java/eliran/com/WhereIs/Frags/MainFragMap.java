@@ -26,6 +26,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.util.Log;
@@ -123,6 +124,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         serchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                LastSearch lastSearch;
                 String Url = "";
                 query = query.trim();
                 if (query.length() > 0) {
@@ -133,23 +135,19 @@ public class MainFragMap extends Fragment implements LocationListener {
                     }
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
                     if (!IsNeerByCB.isChecked()) {
-                        LastSearch lastSearch = new LastSearch(query, "1");
+                         lastSearch = new LastSearch(query, "1");
                         lastSearch.save();
                         intent.putExtra("lat", lat);
                         intent.putExtra("lng", lng);
                         intent.putExtra("PlaceKind", Url);
                         intent.putExtra("IsNeerBy", 1);
                     } else {
-                        LastSearch lastSearch = new LastSearch(query, "-1");
+                         lastSearch = new LastSearch(query, "-1");
                         lastSearch.save();
                         intent.putExtra("query", Url);
                         intent.putExtra("IsNeerBy", -1);
                     }
-                    LoadingDialog = new ProgressDialog(getActivity());
-                    LoadingDialog.setTitle("PLEASE WAIT");
-                    LoadingDialog.setCancelable(false);
-                    //show the dialog:
-                    LoadingDialog.show();
+                   LoadingBar(lastSearch);
 
 
                     getActivity().startService(intent);
@@ -282,10 +280,9 @@ public class MainFragMap extends Fragment implements LocationListener {
             LoadingDialog.dismiss();
             //make keyboard disappear after search finish
             InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            //   mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
+            mgr.hideSoftInputFromWindow(serchview.getWindowToken(), 0);
             List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
-            //TODO sort order by distance
-            //List<SugarPlace> notes = SugarPlace.findWithQuery(SugarPlace.class, "SELECT * FROM SugarPlace ORDER BY lat DESC", null);
+
 
             if (!intent.getBooleanExtra("JSON_IS_NULL", false)) {
                 if (!intent.getBooleanExtra("IsZeroResults", false)) {
@@ -295,7 +292,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                     }
                     //save search list to DATABASE
 
-                    ArrayList<Place>byDistance = new ArrayList<>();
+                   /* ArrayList<Place>byDistance = new ArrayList<>();
                     byDistance.addAll(allPlaces);
                     Collections.sort(allPlaces, new Comparator<Place>() {
 
@@ -305,13 +302,13 @@ public class MainFragMap extends Fragment implements LocationListener {
                             double distance2 = Functions.distance(p2.getLat(),p2.getLng(),lat,lng);
                             return Double.compare(distance1,distance2);
                         }
-                    });
+                    });*/
 
 
                     placesRV.setLayoutManager(new LinearLayoutManager(context));
                     placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
                     placesRV.setAdapter(placeRVadapter);
-                    Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "service finished", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "did not find place \n please try again", Toast.LENGTH_SHORT).show();
                 }
@@ -360,11 +357,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                     placesRV.setAdapter(placeRVadapter);
                 } else {
                     LastSearch lastSearch = LastSearch.last(LastSearch.class);
-                    LoadingDialog = new ProgressDialog(getActivity());
-                    LoadingDialog.setTitle("PLEASE WAIT\n loading places for " + lastSearch.getLastSearch());
-                    LoadingDialog.setCancelable(false);
-                    //show the dialog:
-                    LoadingDialog.show();
+                    LoadingBar(lastSearch);
                     // Toast.makeText(getActivity(), "internet is on going to service", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
@@ -405,5 +398,16 @@ public class MainFragMap extends Fragment implements LocationListener {
 
         allPlaces=null;
         placeRVadapter=null;
+    }
+    ///////////////Loading dialod/////////////////
+    public void LoadingBar(LastSearch lastSearch)
+    {
+        LoadingDialog = new ProgressDialog(getActivity(),ProgressDialog.STYLE_HORIZONTAL);
+        LoadingDialog.setTitle("PLEASE WAIT");
+        LoadingDialog.setMessage("serching results for  "+lastSearch.getLastSearch());
+        LoadingDialog.setCancelable(false);
+        //show the dialog:
+        LoadingDialog.show();
+
     }
 }
