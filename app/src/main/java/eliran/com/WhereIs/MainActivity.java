@@ -32,12 +32,18 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     MainFragMap mainFragMap;
     public static boolean IsFirstTime;
     public static boolean IsLargeDevice=false;
+    BattaryListener battaryListener;
+    IntentFilter ifilter;
     MapFrag mapFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SugarContext.init(getApplicationContext());
+        ifilter = new IntentFilter();
+        battaryListener=new BattaryListener();
+        ifilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        ifilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
      //   registerReceiver(battaryListener, ifilter);
         LinearLayout linearLayout= (LinearLayout) findViewById(R.id.MapContainer);
         if (linearLayout!=null){
@@ -151,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     @Override
     protected void onResume() {
         super.onResume();
+registerReceiver(battaryListener,ifilter);
 
 
 
@@ -168,11 +175,25 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
 
     }
+    public class BattaryListener extends BroadcastReceiver{
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED))
+            {
+               Toast.makeText(MainActivity.this, "charge", Toast.LENGTH_SHORT).show();
+            }else if (intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED)){
+                Toast.makeText(MainActivity.this, "not charge", Toast.LENGTH_SHORT).show();
+            }else if (intent.getAction().equals(Intent.ACTION_PROVIDER_CHANGED)){
+                Toast.makeText(context, "gps", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(battaryListener);
     }
 
 }
