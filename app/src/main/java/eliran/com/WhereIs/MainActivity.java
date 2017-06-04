@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
     protected void onResume() {
         super.onResume();
 registerReceiver(battaryListener,ifilter);
-
+//
 
 
 
