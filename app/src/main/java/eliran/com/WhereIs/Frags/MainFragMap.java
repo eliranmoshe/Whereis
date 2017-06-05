@@ -135,19 +135,19 @@ public class MainFragMap extends Fragment implements LocationListener {
                     }
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
                     if (!IsNeerByCB.isChecked()) {
-                         lastSearch = new LastSearch(query, "1");
+                        lastSearch = new LastSearch(query, "1");
                         lastSearch.save();
                         intent.putExtra("lat", lat);
                         intent.putExtra("lng", lng);
                         intent.putExtra("PlaceKind", Url);
                         intent.putExtra("IsNeerBy", 1);
                     } else {
-                         lastSearch = new LastSearch(query, "-1");
+                        lastSearch = new LastSearch(query, "-1");
                         lastSearch.save();
                         intent.putExtra("query", Url);
                         intent.putExtra("IsNeerBy", -1);
                     }
-                   LoadingBar(lastSearch);
+                    LoadingBar(lastSearch);
 
 
                     getActivity().startService(intent);
@@ -344,37 +344,8 @@ public class MainFragMap extends Fragment implements LocationListener {
         getActivity().registerReceiver(placesBroadCastReciever, intentFilter);
         if (MainActivity.IsFirstTime) {
 
-            List<SugarPlace> BackList = SugarPlace.listAll(SugarPlace.class);
-            if (BackList.size() != 0) {
-                if (!new CheckConnection(getActivity()).isNetworkAvailable()) {
-                    Toast.makeText(getActivity(), "no internet connection", Toast.LENGTH_SHORT).show();
-                    List<Place> allPlaces = new ArrayList<>();
-                    for (int i = 0; i < BackList.size(); i++) {
-                        allPlaces.add(new Place(BackList.get(i).getName(), BackList.get(i).getVicinity(), BackList.get(i).getIcon(), BackList.get(i).getFormatted_address(), BackList.get(i).getLat(), BackList.get(i).getLng(), BackList.get(i).getPhoto_reference()));
-                    }
-                    placesRV.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    placeRVadapter = new PlaceRVadapter(getActivity(), allPlaces, lat, lng);
-                    placesRV.setAdapter(placeRVadapter);
-                } else {
-                    LastSearch lastSearch = LastSearch.last(LastSearch.class);
-                    LoadingBar(lastSearch);
-                    // Toast.makeText(getActivity(), "internet is on going to service", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(getActivity(), GetPlacesService.class);
-                    if (lastSearch.getIsBeerBySearch().equals("1")) {
-                        intent.putExtra("lat", lat);
-                        intent.putExtra("lng", lng);
-                        intent.putExtra("PlaceKind", lastSearch.getLastSearch());
-                        intent.putExtra("IsNeerBy", 1);
-                    } else {
-                        intent.putExtra("query", lastSearch.getLastSearch());
-                        intent.putExtra("IsNeerBy", -1);
-                    }
-                    getActivity().startService(intent);
-                    Log.d("fasdfsd", "fdsfsd");
 
-                }
-            }
         } else {
             if (MainActivity.IsLargeDevice == true) {
                 FragmentChangerInterface fragmentChangerInterface = (FragmentChangerInterface) getActivity();
@@ -396,15 +367,15 @@ public class MainFragMap extends Fragment implements LocationListener {
         super.onPause();
         getActivity().unregisterReceiver(placesBroadCastReciever);
 
-        allPlaces=null;
-        placeRVadapter=null;
+        allPlaces = null;
+        placeRVadapter = null;
     }
+
     ///////////////Loading dialod/////////////////
-    public void LoadingBar(LastSearch lastSearch)
-    {
-        LoadingDialog = new ProgressDialog(getActivity(),ProgressDialog.STYLE_HORIZONTAL);
+    public void LoadingBar(LastSearch lastSearch) {
+        LoadingDialog = new ProgressDialog(getActivity(), ProgressDialog.STYLE_HORIZONTAL);
         LoadingDialog.setTitle("PLEASE WAIT");
-        LoadingDialog.setMessage("serching results for  "+lastSearch.getLastSearch());
+        LoadingDialog.setMessage("serching results for  " + lastSearch.getLastSearch());
         LoadingDialog.setCancelable(false);
         //show the dialog:
         LoadingDialog.show();

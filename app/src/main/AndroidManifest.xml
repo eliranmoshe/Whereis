@@ -10,7 +10,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -24,12 +24,12 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name="eliran.com.WhereIs.Instruments.SettingPref"></activity>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCdoGZBMRm9a1L24ql92c4ddS8cTIJUGcU"/>
         <meta-data android:name="DATABASE" android:value="FAVORITE_PLACE.db" />
         <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-
+        <meta-data android:name="QUERY_LOG" android:value="true"/>
 
 
         <service
