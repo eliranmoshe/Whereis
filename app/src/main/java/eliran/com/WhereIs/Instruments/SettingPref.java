@@ -26,7 +26,7 @@ public class SettingPref extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
-        //set the new value off the KM to MILE CHeckBOx
+        ///////////set the new value off the KM to MILE CHeckBOx
         switchPreference=(SwitchPreference) findPreference("SwitchKMtoMLItem");
         switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -35,14 +35,14 @@ public class SettingPref extends PreferenceActivity {
                 return true;
             }
         });
-        //AlertDialog to dell All Favorite
+        ///////////AlertDialog to dell All Favorite
         Preference preference=findPreference("DelFavoriteItem");
         preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingPref.this);
 
-                //create the dialog:
+                ///////////create the dialog:
                 AlertDialog.Builder dialog = builder
                         .setTitle("warning")
                         .setMessage("ARE YOU SURE YOU WANT TO DELETE ALL FAVORITE PLACES???")
@@ -61,7 +61,7 @@ public class SettingPref extends PreferenceActivity {
                         });
 
 
-                //show the dialog:
+                ///////////show the dialog:
                 AlertDialog TheDialog=dialog.create();
                 TheDialog.show();
                 TheDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);

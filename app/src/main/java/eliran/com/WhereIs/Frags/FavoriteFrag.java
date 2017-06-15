@@ -53,7 +53,7 @@ public class FavoriteFrag extends Fragment {
         return view;
     }
     class DeleteReciver extends BroadcastReceiver{
-        //reciver Broadcast from favorite adapter to notify the adapter
+        ///////////reciver Broadcast from favorite adapter to notify the adapter
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra("IsDelete",false))
@@ -65,6 +65,7 @@ public class FavoriteFrag extends Fragment {
     }
     public List<FavoritePlace> GetArrayToAdapter()
     {
+        ///////////getting the favorite array list to favorite RV adapter
         List<FavoritePlace> favoritePlaces=new ArrayList<>();
         List<FavoritePlace>FavPlaces=FavoritePlace.listAll(FavoritePlace.class);
         for (int i=0;i<FavPlaces.size();i++)

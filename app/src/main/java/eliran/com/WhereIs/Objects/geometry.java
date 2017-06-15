@@ -6,6 +6,7 @@ package eliran.com.WhereIs.Objects;
 
 public class geometry {
     private location location;
+    /////////// helper class for Gson
 
     public geometry(eliran.com.WhereIs.Objects.location location) {
         this.location = location;

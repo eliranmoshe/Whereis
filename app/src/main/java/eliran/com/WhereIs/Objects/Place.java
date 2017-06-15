@@ -6,11 +6,10 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-/**
- * Created by eliran on 4/15/2017.
- */
 
 public class Place implements Parcelable {
+
+    /////////// helper class for Gson
     private String name;
     private String vicinity;
     private String icon;

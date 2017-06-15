@@ -19,7 +19,7 @@ public class SugarPlace extends SugarRecord {
     public SugarPlace(){
 
     }
-
+    /////////// helper class for SugarORM
     public SugarPlace(String name, String vicinity, String icon, String formatted_address, double lat, double lng, String photo_reference) {
         this.name = name;
         this.vicinity = vicinity;

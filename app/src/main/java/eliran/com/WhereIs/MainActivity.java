@@ -41,31 +41,25 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SugarContext.init(getApplicationContext());
-
+        ///////////defined if is this large or normal device
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.MapContainer);
         if (linearLayout != null) {
             IsLargeDevice = true;
             mapFrag = new MapFrag();
             getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFrag, "map").commit();
         }
-        //Add the main fragment to activity
-
-
+        ///////////Add the main fragment to activity
         if (getFragmentManager().findFragmentByTag("main") == null) {
             mainFragMap = new MainFragMap();
             MainActivity.IsFirstTime = true;
             getFragmentManager().beginTransaction().replace(R.id.MainContainer, mainFragMap, "main").commit();
-
-
         }
-
-
     }
 
 
     @Override
     public void FromMainToMap(Place currentPlace) {
-
+        ///////////transaction the Main Fragment
         MapFrag mapFrag = new MapFrag();
         mapFrag.selectedPlace = currentPlace;
         mapFrag.mylng = mainFragMap.lng;
@@ -77,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public void FromMainToFavorite() {
+        ///////////transaction the Favorite Fragment
+        ///////////defined if is this large or normal device and open the correct Xml file
         if (IsLargeDevice == true) {
             FavoriteFrag favoriteFrag = new FavoriteFrag();
             getFragmentManager().beginTransaction().addToBackStack("FavFrag").replace(R.id.LargeMainContainer, favoriteFrag, "FavFrag").commit();
@@ -94,27 +90,24 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
     @Override
     public void InflateMapFragment(final Place place) {
+        ///////////when the user clicked one of the item in places list view
+        ///////////open the GoogleMap Fragment
         MapFragment mapFragment = new MapFragment();
         getFragmentManager().beginTransaction().replace(R.id.MapContainer, mapFragment).commit();
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-
+                ///////////set the Lat Lng from the current places clicked
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
                 LatLng latLng = new LatLng(place.getLat(), place.getLng());
                 CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-
-
                 googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 googleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(MainFragMap.lat, MainFragMap.lng))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-
-
                 googleMap.moveCamera(update);
             }
         });
@@ -132,41 +125,27 @@ public class MainActivity extends AppCompatActivity implements FragmentChangerIn
 
         switch (item.getItemId()) {
             case R.id.SettingsItem:
+                ///////////go to app settings
                 Intent intent = new Intent(this, SettingPref.class);
                 startActivity(intent);
                 break;
             case R.id.GoToFavoriteItem:
                 if (IsLargeDevice == true) {
-
+                    ///////////mean while there is no different screen for large device
+                    //TODO add designe screen for large device
                 }
                 if (getFragmentManager().findFragmentByTag("FavFrag") == null) {
                     FromMainToFavorite();
                 }
         }
-
         return true;
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-    }
-
     @Override
     public void onBackPressed() {
+        ///////////make method know that is not the first time app up
         MainActivity.IsFirstTime = false;
         super.onBackPressed();
 
 
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
 }

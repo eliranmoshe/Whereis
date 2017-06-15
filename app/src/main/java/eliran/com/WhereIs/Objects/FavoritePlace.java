@@ -14,7 +14,7 @@ public class FavoritePlace extends SugarRecord{
     private double lat;
     private double lng;
     private String photo_reference;
-
+    /////////// helper class for Gson
     public FavoritePlace(){}
 
     public FavoritePlace(String name, String vicinity, String icon, String formatted_address, double lat, double lng, String photo_reference) {

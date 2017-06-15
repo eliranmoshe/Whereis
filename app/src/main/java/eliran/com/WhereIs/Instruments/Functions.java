@@ -12,19 +12,19 @@ import java.io.ByteArrayOutputStream;
 
 public class Functions {
 
-    //set image bitmap
+    ///////////set image bitmap
     public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
-    //used with picasso, convert to bitmap
+    ///////////used with picasso, convert to bitmap
     public static Bitmap decodeBase64(String input) {
         byte[] decodedBytes = Base64.decode(input, 0);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
-    //get distance from current place to place location
+    ///////////get distance from current place to place location
     public static double distance(double lat2, double lng2, double lat1, double lng1) {
         if (lat2==0.0&&lng2==0.0)
         {

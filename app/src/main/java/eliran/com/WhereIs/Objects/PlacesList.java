@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class PlacesList  {
     private ArrayList<Place> results;
-
+    /////////// helper class for Gson
     public ArrayList<Place> getResults() {
         return results;
     }

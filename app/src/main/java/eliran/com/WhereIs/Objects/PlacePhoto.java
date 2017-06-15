@@ -6,7 +6,7 @@ package eliran.com.WhereIs.Objects;
 
 public class PlacePhoto {
     private String photo_reference;
-
+    /////////// helper class for Gson
     public String getPhoto_reference() {
         return photo_reference;
     }

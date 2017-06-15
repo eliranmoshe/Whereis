@@ -9,7 +9,7 @@ import com.orm.SugarRecord;
 public class LastSearch extends SugarRecord {
     private String LastSearch;
     private String IsBeerBySearch;
-
+    /////////// helper class for Gson
     public LastSearch() {
     }
 

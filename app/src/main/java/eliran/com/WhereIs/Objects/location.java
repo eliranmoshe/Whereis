@@ -7,7 +7,7 @@ package eliran.com.WhereIs.Objects;
 public class location {
     private double lat;
     private double lng;
-
+    /////////// helper class for Gson
     public location(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;

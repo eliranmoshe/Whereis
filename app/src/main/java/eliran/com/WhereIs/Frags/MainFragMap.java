@@ -83,21 +83,17 @@ public class MainFragMap extends Fragment implements LocationListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //inflate the fragment into layout
+        ///////////inflate the fragment into layout
         view = inflater.inflate(R.layout.main_frag_map, container, false);
-//
+
         SugarContext.init(getActivity());
         // make broadcast filter and listener
         placesBroadCastReciever = new PlacesBroadCastReciever();
         intentFilter = new IntentFilter("intent.to.MainFragment.FINISH_PLACES");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(placesBroadCastReciever, intentFilter);
 //TODO last known location
-/*if(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-            currentLocation =locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }else{
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }*/
-        //request location permission
+
+        ///////////request location permission
 
 
         locationManager = (LocationManager) getActivity().getSystemService(Service.LOCATION_SERVICE);
@@ -109,7 +105,7 @@ public class MainFragMap extends Fragment implements LocationListener {
             //location listener)
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1, this);
         } else {
-            //request permission 12 is the request number
+            ///////////request permission 12 is the request number
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
         }
 
@@ -124,6 +120,7 @@ public class MainFragMap extends Fragment implements LocationListener {
         serchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                ///////////text from edot text that uset type
                 LastSearch lastSearch;
                 String Url = "";
                 query = query.trim();
@@ -134,6 +131,7 @@ public class MainFragMap extends Fragment implements LocationListener {
                         e.printStackTrace();
                     }
                     Intent intent = new Intent(getActivity(), GetPlacesService.class);
+                    ///////////check if is near by or search by city
                     if (!IsNeerByCB.isChecked()) {
                         lastSearch = new LastSearch(query, "1");
                         lastSearch.save();
@@ -152,6 +150,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
                     getActivity().startService(intent);
                 } else {
+                    ///////////if the user doeasnt type nothing
                     Snackbar snackbar = Snackbar
                             .make(view, "No City Name", Snackbar.LENGTH_LONG)
                             .setDuration(5000);
@@ -166,6 +165,7 @@ public class MainFragMap extends Fragment implements LocationListener {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //TODO outo texst complete by history searches
                 return true;
             }
 
@@ -343,7 +343,6 @@ public class MainFragMap extends Fragment implements LocationListener {
         super.onResume();
         getActivity().registerReceiver(placesBroadCastReciever, intentFilter);
         if (MainActivity.IsFirstTime) {
-
 
 
         } else {
